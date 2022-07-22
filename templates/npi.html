@@ -1,0 +1,454 @@
+<html>
+
+<head>
+  <title>NPI Checker</title>
+  <style>
+    a {
+      color: green;
+      margin: 5px;
+      cursor: pointer;
+    }
+
+    a:hover {
+      background: yellow;
+    }
+
+    .button3 {
+      background-color: #04AA6D;
+      border: none;
+      color: white;
+      padding: 10px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 4px 2px;
+      font-family: Arial;
+    }
+
+    .button3 {
+      border-radius: 8px;
+    }
+
+    input,
+    textarea,
+    label,
+    form,
+    legend {
+      border-radius: 5px;
+      font-family: Arial;
+    }
+
+    .button2 {
+      background-color: #04AA6D;
+      border: none;
+      color: white;
+      padding: 4px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 10px;
+      margin: 4px 2px;
+      font-family: Arial;
+    }
+
+    .button2 {
+      border-radius: 3px;
+    }
+
+    input,
+    textarea,
+    label,
+    form,
+    legend {
+      border-radius: 2px;
+      font-family: Arial;
+    }
+
+    #sticky {
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      /*box-shadow: 0px 0px 0px 1px rgba(56, 56, 56), inset 0 -2px;
+      -webkit-box-shadow: 0px 0px 0px 1px rgb(56 56 56), inset 0 -2px;*/
+    }
+
+    /*
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+*/
+    @import url(https://fonts.googleapis.com/css?family=Patua+One|Open+Sans);
+
+    * {
+      -moz-box-sizing: border-box;
+      -webkit-box-sizing: border-box;
+      box-sizing: border-box;
+    }
+
+    table {
+      border-collapse: separate;
+      background: #fff;
+      -moz-border-radius: 5px;
+      -webkit-border-radius: 5px;
+      border-radius: 5px;
+      -moz-box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+      -webkit-box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+      box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    thead {
+      -moz-border-radius: 5px;
+      -webkit-border-radius: 5px;
+      border-radius: 5px;
+    }
+
+    thead th {
+      font-family: 'Arial';
+      font-size: 16px;
+      font-weight: 400;
+      color: #fff;
+      text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.5);
+      text-align: center;
+      padding: 10px;
+      background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjAuNSIgeTE9IjAuMCIgeDI9IjAuNSIgeTI9IjEuMCI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzY0NmY3ZiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzRhNTU2NCIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JhZCkiIC8+PC9zdmc+IA==');
+      background-size: 100%;
+      background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #646f7f), color-stop(100%, #4a5564));
+      background-image: -moz-linear-gradient(#646f7f, #4a5564);
+      background-image: -webkit-linear-gradient(#646f7f, #4a5564);
+      background-image: linear-gradient(#646f7f, #4a5564);
+      border-top: 1px solid #858d99;
+    }
+
+    thead th:first-child {
+      -moz-border-radius-topleft: 5px;
+      -webkit-border-top-left-radius: 5px;
+      border-top-left-radius: 5px;
+    }
+
+    thead th:last-child {
+      -moz-border-radius-topright: 5px;
+      -webkit-border-top-right-radius: 5px;
+      border-top-right-radius: 5px;
+    }
+
+    tbody tr td {
+      font-family: 'Open Sans', sans-serif;
+      font-weight: 400;
+      color: #5f6062;
+      font-size: 14px;
+      padding: 10px 10px 10px 10px;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    tbody tr:nth-child(2n) {
+      background: #e0e3e4;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    tbody tr:last-child td:first-child {
+      -moz-border-radius-bottomleft: 5px;
+      -webkit-border-bottom-left-radius: 5px;
+      border-bottom-left-radius: 5px;
+    }
+
+    tbody tr:last-child td:last-child {
+      -moz-border-radius-bottomright: 5px;
+      -webkit-border-bottom-right-radius: 5px;
+      border-bottom-right-radius: 5px;
+    }
+
+    td.fitwidth {
+      width: 1px;
+      white-space: nowrap;
+    }
+
+    th.fitwidth {
+      width: 1px;
+      white-space: nowrap;
+    }
+
+    tr:hover {
+      background-color: #fcffc6 !important;
+    }
+
+    #yes {
+      background-color: rgba(60, 179, 113, 0.5)
+    }
+
+    #no {
+      background-color: rgba(255, 0, 0, 0.5);
+    }
+    .pecos{
+      text-align: center;
+      color: rgb(25, 25, 25);
+    }
+    .maxwidth{
+      max-width: 200px;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .maxwidth:hover{
+    overflow: visible; 
+    white-space: normal;
+    height:auto;
+}
+  </style>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script src="https://code.jquery.com/jquery-migrate-3.1.0.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+  <script type="text/javascript">
+    // Author: Jared Goodwin
+    // showLoading() - Display loading wheel.
+    // removeLoading() - Remove loading wheel.
+    // Requires ECMAScript 6 (any modern browser).
+    function showLoading() {
+      if (document.getElementById("divLoadingFrame") != null) {
+        return;
+      }
+      var style = document.createElement("style");
+      style.id = "styleLoadingWindow";
+      style.innerHTML = `
+        .loading-frame {
+            position: fixed;
+            background-color: rgba(0, 0, 0, 0.8);
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 4;
+        }
+
+        .loading-track {
+            height: 50px;
+            display: inline-block;
+            position: absolute;
+            top: calc(50% - 50px);
+            left: 50%;
+        }
+
+        .loading-dot {
+            height: 5px;
+            width: 5px;
+            background-color: white;
+            border-radius: 100%;
+            opacity: 0;
+        }
+
+        .loading-dot-animated {
+            animation-name: loading-dot-animated;
+            animation-direction: alternate;
+            animation-duration: .75s;
+            animation-iteration-count: infinite;
+            animation-timing-function: ease-in-out;
+        }
+
+        @keyframes loading-dot-animated {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+    `
+      document.body.appendChild(style);
+      var frame = document.createElement("div");
+      frame.id = "divLoadingFrame";
+      frame.classList.add("loading-frame");
+      for (var i = 0; i < 10; i++) {
+        var track = document.createElement("div");
+        track.classList.add("loading-track");
+        var dot = document.createElement("div");
+        dot.classList.add("loading-dot");
+        track.style.transform = "rotate(" + String(i * 36) + "deg)";
+        track.appendChild(dot);
+        frame.appendChild(track);
+      }
+      document.body.appendChild(frame);
+      var wait = 0;
+      var dots = document.getElementsByClassName("loading-dot");
+      for (var i = 0; i < dots.length; i++) {
+        window.setTimeout(function (dot) {
+          dot.classList.add("loading-dot-animated");
+        }, wait, dots[i]);
+        wait += 150;
+      }
+    };
+
+    function changeBackground() {
+      var pecos = document.getElementsByClassName('pecos');
+      console.log("pecos: ", pecos);
+      console.log("pecos[i]:", pecos[0].innerHTML);
+
+      for (var i = 0, len = pecos.length; i < len; i++) {
+        if (pecos[i].innerHTML == "NO") {
+          pecos[i].id = "no"
+        } else if (pecos[i].innerHTML == "YES") {
+          pecos[i].id = "yes"
+        }
+        console.log("pecos item: ", pecos[i].innerHTML);
+      }
+    }
+
+    function removeLoading() {
+      document.body.removeChild(document.getElementById("divLoadingFrame"));
+      document.body.removeChild(document.getElementById("styleLoadingWindow"));
+    };
+
+    function checkNPI() {
+      $('#msg').hide();
+
+      if ($('#NPINUMBER').val() == null || $('#NPINUMBER').val() == "") {
+        $('#msg').show();
+        $("#msg").html("NPINUMBER is required field.").css("color", "red");
+      } else {
+        $.ajax({
+          type: "POST",
+          url: "http://localhost:80/npi_check",
+          data: $('#NPIChecker').serialize(),
+          dataType: "html",
+          cache: false,
+          beforeSend: showLoading(),
+          success: function (msg) {
+            $('#msg').show();
+            $("#msg").html(msg.replace(/["]+/g, ''));
+            removeLoading();
+            $('a.NPI').click(function () {
+              $('#NPINUMBER').val($(this).html());
+            });
+            changeBackground();
+          },
+          error: function (jqXHR, textStatus, errorThrown) {
+            removeLoading();
+            $('#msg').show();
+            $("#msg").html(JSON.stringify(jqXHR) + " " + JSON.stringify(textStatus) + " " + errorThrown);
+          }
+        });
+      }
+    }
+
+    function checkPHONE() {
+      $('#msg').hide();
+
+      if ($('#PHONENUMBER').val() == null || $('#PHONENUMBER').val() == "") {
+        $('#msg').show();
+        $("#msg").html("PHONENUMBER is required field.").css("color", "red");
+      } else {
+        $.ajax({
+          type: "POST",
+          url: "http://localhost:80/phone_check",
+          data: $('#NPIChecker').serialize(),
+          dataType: "html",
+          cache: false,
+          beforeSend: showLoading(),
+          success: function (msg) {
+            $('#msg').show();
+            removeLoading();
+            $("#msg").html(msg.replace(/["]+/g, ''));
+            $('a.NPI').click(function () {
+              $('#PHONENUMBER').val($(this).html());
+            });
+            changeBackground();
+          },
+          error: function (jqXHR, textStatus, errorThrown) {
+            removeLoading();
+            $('#msg').show();
+            $("#msg").html(JSON.stringify(jqXHR) + " " + JSON.stringify(textStatus) + " " + errorThrown);
+          }
+        });
+      }
+    }
+
+    function checkDOC() {
+      $('#msg').hide();
+
+      if ($('#DOCTORNAME').val() == null || $('#DOCTORNAME').val() == "") {
+        $('#msg').show();
+        $("#msg").html("DOCTORNAME is required field.").css("color", "red");
+      } else {
+        $.ajax({
+          type: "POST",
+          url: "http://localhost:80/doc_check",
+          data: $('#NPIChecker').serialize(),
+          dataType: "html",
+          cache: false,
+          beforeSend: showLoading(),
+          success: function (msg) {
+            $('#msg').show();
+            $("#msg").html(msg.replace(/["]+/g, ''));
+            removeLoading();
+            $('a.NPI').click(function () {
+              $('#NPINUMBER').val($(this).html());
+            });
+            changeBackground();
+          },
+          error: function (jqXHR, textStatus, errorThrown) {
+            removeLoading();
+            $('#msg').show();
+            $("#msg").html(JSON.stringify(jqXHR) + " " + JSON.stringify(textStatus) + " " + errorThrown);
+          }
+        });
+      }
+    }
+  </script>
+</head>
+
+<body>
+  <form id="NPIChecker" class="NPIChecker" method="POST" action="http://localhost:80/npi">
+    <fieldset>
+      <legend> <b>NPI Checker</b> </legend>
+      <div class="msg" id="msg"></div>
+      <label for="text">NPI Number:</label><br>
+      <input type="text" id="NPINUMBER" name="NPINUMBER" value="{{NPINUMBER}}" placeholder="1234566456" required><input
+        class="button2" id="npisubmit" type="button" value="CHECK" onclick='checkNPI()'></td><br>
+      <label for="text">Doctor Name:</label><br>
+      <input type="text" id="DOCTORNAME" name="DOCTORNAME" value="{{DOCTORNAME}}" placeholder="Joseph Smith"
+        required><input size=3 maxlength=3 type="text" id="STATE" name="STATE" value="{{STATE}}" placeholder="PA"
+        required><input class="button2" id="docsubmit" type="button" value="CHECK" onclick='checkDOC()'></td><br>
+      <label for="text">Phone Number:</label><br>
+      <input type="text" id="PHONENUMBER" name="PHONENUMBER" value="{{PHONENUMBER}}" placeholder="888-555-1234"
+        required><input class="button2" id="phonesubmit" type="button" value="CHECK" onclick='checkPHONE()'></td><br>
+    </fieldset>
+  </form>
+
+  <script>
+    // When the user hits enter, simulate form submission which calls check___();
+    $('#NPINUMBER').keypress(function (event) {
+      var keycode = (event.keyCode ? event.keyCode : event.which);
+      if (keycode == '13') {
+        $("#npisubmit").click();
+      }
+    });
+
+    $('#DOCTORNAME').keypress(function (event) {
+      var keycode = (event.keyCode ? event.keyCode : event.which);
+      if (keycode == '13') {
+        $("#docsubmit").click();
+      }
+    });
+
+    $('#STATE').keypress(function (event) {
+      var keycode = (event.keyCode ? event.keyCode : event.which);
+      if (keycode == '13') {
+        $("#docsubmit").click();
+      }
+    });
+
+    $('#PHONENUMBER').keypress(function (event) {
+      var keycode = (event.keyCode ? event.keyCode : event.which);
+      if (keycode == '13') {
+        $("#phonesubmit").click();
+      }
+    });
+  </script>
+</body>
+
+</html>

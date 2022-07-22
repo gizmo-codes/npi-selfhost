@@ -51,6 +51,9 @@ def npi_check():
             logging.error('%s NPINUMBER was not 10 digits' %npinumber)
             return "NPI number must be exactly 10 digits"
 
+        # Log Feedback
+        print("Beginning search for NPI: %s" %(npinumber))
+
         # try NPPES api call.
         try:
             response = search(search_params={'number': npinumber})
@@ -73,6 +76,7 @@ def npi_check():
 
         # No results
         if response['result_count'] == 0 and isLocal == 0 or (len(rows) == 0 and isLocal == 1):
+            print("No results.")
             return "No results found for %s" %npinumber
 
         # NPPES API working: Set PECOS API query to NPI# recieved from the NPPES API call.
@@ -103,6 +107,8 @@ def npi_check():
             current_time = get_time()
             logging.debug('npi_check End %s %s' %(today,current_time))
             #print("npi_check end")
+            print("Adding Healthcare Worker [ID: "+str(npinumber)+"]")
+            print("Data complete")
             return resp
         # PECOS API down.
         except requests.exceptions.RequestException as e:
@@ -129,6 +135,8 @@ def npi_check():
                     resp = jsonify('<table id=respTable><thead><tr id=sticky><th>NPI</th><th class=fitwidth>Name</th><th>Credential</th><th class=fitwidth>Practice #</th><th class=fitwidth>Mailing #</th><th class=fitwidth>Fax</th><th>Primary Practice</th><th>Mailing Address</th><th class=fitwidth>Other Practice</th><th>PECOS</th><th class=maxwidth>Email</th></tr></thead>' + npireturns + '</table><br><font color=red>Execution Time: ' + str(round(elapsed_time,2)) + ' seconds</font>')
                     current_time = get_time()
                     logging.debug('npi_check End %s %s' %(today,current_time))
+                    print("Adding Healthcare Worker [ID: "+str(npinumber)+"]")
+                    print("Data complete")
 
                     return resp
                 # Local PECOS SQL DB returned rows, set appropriate key value pair based on returned data.
@@ -146,6 +154,8 @@ def npi_check():
                     resp = jsonify('<table id=respTable><thead><tr id=sticky><th>NPI</th><th class=fitwidth>Name</th><th>Credential</th><th class=fitwidth>Practice #</th><th class=fitwidth>Mailing #</th><th class=fitwidth>Fax</th><th>Primary Practice</th><th>Mailing Address</th><th class=fitwidth>Other Practice</th><th>PECOS</th><th class=maxwidth>Email</th></tr></thead>' + npireturns + '</table><br><font color=red>Execution Time: ' + str(round(elapsed_time,2)) + ' seconds</font>')
                     current_time = get_time()
                     logging.debug('npi_check End %s %s' %(today,current_time))
+                    print("Adding Healthcare Worker [ID: "+str(npinumber)+"]")
+                    print("Data complete")
 
                     return resp
             # Both NPPES and PECOS api down, use local (SQL) data for both.
@@ -168,6 +178,7 @@ def npi_check():
 
                 # Local NPPES SQL DB returned no rows, therefore no matching doctor by given NPI number.
                 if len(npirows) == 0:
+                    print("No results")
                     return "NO RESULTS FOUND FOR THAT NUMBER"
                 # Local NPPES SQL DB returned rows, check for PECOS data mathcing given NPI.
                 else:
@@ -180,6 +191,8 @@ def npi_check():
                         resp = jsonify('<table id=respTable><thead><tr id=sticky><th>NPI</th><th class=fitwidth>Name</th><th>Credential</th><th class=fitwidth>Practice #</th><th class=fitwidth>Mailing #</th><th class=fitwidth>Fax</th><th>Primary Practice</th><th>Mailing Address</th><th class=fitwidth>Other Practice</th><th>PECOS</th><th class=maxwidth>Email</th></tr></thead>' + npireturns + '</table><br><font color=red>Execution Time: ' + str(round(elapsed_time,2)) + ' seconds</font>')
                         current_time = get_time()
                         logging.debug('npi_check End %s %s' %(today,current_time))
+                        print("Adding Healthcare Worker [ID: "+str(npinumber)+"]")
+                        print("Data complete")
                         return resp
                     # Local PECOS SQL DB returned rows, set appropriate key value pair based on returned data.
                     else:
@@ -198,6 +211,9 @@ def npi_check():
                         now = datetime.now()
                         current_time = now.strftime("%H:%M:%S")
                         logging.debug('npi_check End %s %s' %(today,current_time))
+
+                        print("Adding Healthcare Worker [ID: "+str(npinumber)+"]")
+                        print("Data complete")
 
                         return resp
     else:
@@ -232,11 +248,14 @@ def phone_check():
         phonenumber = re.sub(r"[^0-9]", '', phonenumber)
 
         # Adding dashes for error feedback/readability.
+        # TODO Length based output here.
         p = phonenumber
         p = '-'.join([p[:3], p[3:6], p[6:]])
 
         if len(phonenumber) != 10:
             return "%s is not a valid phone number." %p
+
+        print("Beginning search for phone number %s" %phonenumber)
              
         npireturns_all = ""
         con = sqlite3.connect(db)
@@ -527,8 +546,10 @@ def doc_check():
     if "DOCTORNAME" in request.form and len(request.form['DOCTORNAME']) > 3:
         if " " not in request.form['DOCTORNAME']:
             DOCTOR_LASTNAME = re.sub(r"[^a-zA-Z0-9]", "",request.form["DOCTORNAME"].upper()) # Only last name given
+            print("Beginning name search | Last name: %s" %(DOCTOR_LASTNAME))
             if "STATE" in request.form and len(request.form['STATE']) > 1:
                 DOC_STATE = re.sub(r"[^a-zA-Z0-9]", "",request.form['STATE'].upper())
+                print("Beginning name search | Last Name + State: %s %s" %(DOCTOR_FIRSTNAME,DOC_STATE))
                 try:
                     response = search(search_params={'last_name': DOCTOR_LASTNAME, 'state' : DOC_STATE},limit=50)
                     logging.debug('DOCTOR NAME SEARCH WITH STATE RETURNED: %s ' %response)
@@ -566,6 +587,7 @@ def doc_check():
             DOCTOR_LASTNAME = re.sub(r"[^a-zA-Z0-9]", "",DOCTORFULLNAME[1].upper())
             if "STATE" in request.form and len(request.form['STATE']) > 1:
                 DOC_STATE = re.sub(r"[^a-zA-Z0-9]", "",request.form['STATE'].upper())
+                print("Beginning name search | Full name + State: %s %s - %s" %(DOCTOR_FIRSTNAME,DOCTOR_LASTNAME,DOC_STATE))
                 try:
                     response = search(search_params={'first_name': DOCTOR_FIRSTNAME, 'last_name': DOCTOR_LASTNAME, 'state' : DOC_STATE},limit=50)
                     logging.debug('DOCTOR NAME SEARCH WITH FIRST AND LAST NAME WITH STATE RETURNED: %s ' %response)
@@ -582,6 +604,7 @@ def doc_check():
                     rows = cur.fetchall()
                     con.close()
             else:
+                print("Beginning name search | Full name: %s %s" %(DOCTOR_FIRSTNAME,DOCTOR_LASTNAME))
                 try:
                     response = search(search_params={'first_name': DOCTOR_FIRSTNAME, 'last_name': DOCTOR_LASTNAME},limit=50)
                     logging.debug('DOCTOR NAME SEARCH WITH FIRST AND LAST NAME RETURNED: %s ' %response)
@@ -599,6 +622,7 @@ def doc_check():
                     con.close()
 
         if response['result_count'] == 0 and isLocal == 0 or (len(rows) == 0 and isLocal == 1):
+            print("No results")
             return "No doctor found by the name '%s %s'" %(DOCTOR_FIRSTNAME,DOCTOR_LASTNAME)
 
         # NPPES API Down
@@ -720,7 +744,9 @@ def doc_check():
 
                                 # Local NPPES SQL DB returned no rows, therefore no matching doctor by given NPI number.
                                 if len(npirows) == 0:
-                                    return "NO RESULTS FOUND FOR THAT NAME"
+                                    print("No results")
+                                    return "No doctor found by the name '%s %s'" %(DOCTOR_FIRSTNAME,DOCTOR_LASTNAME)
+
                                 # Local NPPES SQL DB returned rows, check for PECOS data mathcing given NPI.
                                 else:
                                     # No matching local PECOS data found for given NPI, set PECOS data as empty.
@@ -810,7 +836,8 @@ def doc_check():
 
                             # Local NPPES SQL DB returned no rows, therefore no matching doctor by given NPI number.
                             if len(npirows) == 0:
-                                return "NO RESULTS FOUND FOR THAT NAME"
+                                print("No results")
+                                return "No doctor found by the name '%s %s'" %(DOCTOR_FIRSTNAME,DOCTOR_LASTNAME)
                             # Local NPPES SQL DB returned rows, check for PECOS data mathcing given NPI.
                             else:
                                 # No matching local PECOS data found for given NPI, set PECOS data as empty.
@@ -961,7 +988,8 @@ def doc_check():
 
                                 # Local NPPES SQL DB returned no rows, therefore no matching doctor by given NPI number.
                                 if len(npirows) == 0:
-                                    return "NO RESULTS FOUND FOR THAT NUMBER"
+                                    return "No results found for given doctor NPI number %s" %npinumber
+                                    
                                 # Local NPPES SQL DB returned rows, check for PECOS data mathcing given NPI.
                                 else:
                                     # No matching local PECOS data found for given NPI, set PECOS data as empty.
@@ -1051,7 +1079,7 @@ def doc_check():
 
                             # Local NPPES SQL DB returned no rows, therefore no matching doctor by given NPI number.
                             if len(npirows) == 0:
-                                return "NO RESULTS FOUND FOR THAT NUMBER"
+                                return "No results found for given doctor NPI number %s" %npinumber
                             # Local NPPES SQL DB returned rows, check for PECOS data mathcing given NPI.
                             else:
                                 # No matching local PECOS data found for given NPI, set PECOS data as empty.
@@ -1244,4 +1272,5 @@ def npi():
         return render_template('npi.html')
 
 if __name__ == '__main__':
-    npi_app.run(host='0.0.0.0', port=80, debug=True)
+    npi_app.run(host='74.103.169.112', port=5755, threads=8, debug=True)
+    #npi_app.run(host='0.0.0.0', port=5755, threads=8, debug=True)

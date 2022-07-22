@@ -1,7 +1,1 @@
 This is the NPI Checker REPO
-
-Build image from current directory:
-docker build -t npiapp .
-
-Run container with mounted DB file (note the paths):
-docker run --name npiapp -p 5755:5755 -e PYTHONUNBUFFERED=1 --mount type=bind,source=C:\sqlite\db,target=/app/db npiapp

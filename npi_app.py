@@ -1292,6 +1292,7 @@ def set_headers():
     headers["Access-Control-Allow-Methods"] = "DELETE, POST, GET, OPTIONS"
     return headers
 
+# TODO Make this the hopepage in addition.
 # Post landing page.
 @npi_app.route('/npi', methods=['POST', 'GET'])
 def npi():

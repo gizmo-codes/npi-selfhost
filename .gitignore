@@ -4,3 +4,4 @@ npi.db
 pecos.csv
 rootkey.csv
 /db
+__pycache__

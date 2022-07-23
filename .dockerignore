@@ -1,0 +1,8 @@
+# Ignore files.
+npi.log
+npi_csv_file_get.py
+npi_csv_pecos_get.py
+rootkey.csv
+.git*
+.dockerignore.bak
+__pycache__

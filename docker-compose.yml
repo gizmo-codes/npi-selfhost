@@ -1,18 +1,15 @@
 services:
   npiapp:
     container_name: npiapp
-    image: omzig7/npi:waitress
+    image: omzig7/npi:selfhost
     environment:
       - PYTHONUNBUFFERED=1
       - COMPOSE_PROJECT_NAME=npi
     ports:
-      - 80:80
+      - 5755:5755
     volumes:
-      - db:/app/db
-
-volumes:
-  db:
-    driver: azure_file
-    driver_opts:
-      share_name: npifiles
-      storage_account_name: npistorage1
+    # - db1:/app/db
+      - ".:/app"
+      - type: bind
+        source: N:\Projects\db
+        target: /app/db

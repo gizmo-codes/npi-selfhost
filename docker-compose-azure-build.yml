@@ -1,15 +1,12 @@
 services:
   npiapp:
     container_name: npiapp
-    image: python
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: omzig7/npi:waitress
     environment:
       - PYTHONUNBUFFERED=1
       - COMPOSE_PROJECT_NAME=npi
     ports:
-      - 5755:5755
+      - 80:80
     volumes:
       - db:/app/db
 

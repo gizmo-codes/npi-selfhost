@@ -1,0 +1,15 @@
+services:
+  npiapp:
+    container_name: npiapp
+    image: omzig7/npi:selfhost
+    environment:
+      - PYTHONUNBUFFERED=1
+      - COMPOSE_PROJECT_NAME=npi
+    ports:
+      - 5755:5755
+    volumes:
+    # - db1:/app/db
+      - ".:/app"
+      - type: bind
+        source: N:\Projects\db
+        target: /app/db

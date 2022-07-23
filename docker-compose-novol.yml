@@ -1,0 +1,9 @@
+services:
+  npiapp:
+    container_name: npiapp
+    image: omzig7/npi:9
+    environment:
+      - PYTHONUNBUFFERED=1
+      - COMPOSE_PROJECT_NAME=npi
+    ports:
+      - 5755:5755

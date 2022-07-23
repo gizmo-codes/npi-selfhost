@@ -1,0 +1,21 @@
+services:
+  npiapp:
+    container_name: npiapp
+    image: python
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - PYTHONUNBUFFERED=1
+      - COMPOSE_PROJECT_NAME=npi
+    ports:
+      - 5755:5755
+    volumes:
+      - db:/app/db
+
+volumes:
+  db:
+    driver: azure_file
+    driver_opts:
+      share_name: npifiles
+      storage_account_name: npistorage1

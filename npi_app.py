@@ -10,6 +10,7 @@ import re
 import logging
 import sqlite3
 
+#TODO: double space between names makes it broken
 
 logging.basicConfig(filename='npi.log', level=logging.DEBUG)
 logging.debug('Program initialized')
@@ -49,7 +50,8 @@ def npi_check():
         # NPI numbers are required to be exactly 10 digits.
         if len(npinumber) != 10:
             logging.error('%s NPINUMBER was not 10 digits' %npinumber)
-            return "NPI number must be exactly 10 digits"
+            print("Invalid NPI number [%s]: %s digits provided." %(npinumber,len(npinumber)))
+            return "<span style='color: red;'>NPI number must be exactly 10 digits</span>.<br>You provided [%s]: %s digits." %(npinumber,len(npinumber))
 
         # Log Feedback
         print("Beginning search for NPI: %s" %(npinumber))
@@ -76,8 +78,8 @@ def npi_check():
 
         # No results
         if response['result_count'] == 0 and isLocal == 0 or (len(rows) == 0 and isLocal == 1):
-            print("No results.")
-            return "No results found for %s" %npinumber
+            print("No results")
+            return "<span style='color: red;'>No results found</span> for NPI: %s" %npinumber
 
         # NPPES API working: Set PECOS API query to NPI# recieved from the NPPES API call.
         if isLocal == 0:   
@@ -179,7 +181,7 @@ def npi_check():
                 # Local NPPES SQL DB returned no rows, therefore no matching doctor by given NPI number.
                 if len(npirows) == 0:
                     print("No results")
-                    return "NO RESULTS FOUND FOR THAT NUMBER"
+                    return "<span style='color: red;'>No results found</span> for NPI: %s" %npinumber
                 # Local NPPES SQL DB returned rows, check for PECOS data mathcing given NPI.
                 else:
                     # No matching local PECOS data found for given NPI, set PECOS data as empty.
@@ -217,7 +219,10 @@ def npi_check():
 
                         return resp
     else:
-        return "NPI number must be exactly 10 digits"
+        npinumber = request.form['NPINUMBER']
+        logging.error('%s NPINUMBER was not 10 digits' %npinumber)
+        print("Invalid NPI number [%s]: %s digits provided." %(npinumber,len(npinumber)))
+        return "<span style='color: red;'>NPI number must be exactly 10 digits</span>.<br>You provided [%s]: %s digits." %(npinumber,len(npinumber))
 
 # API to check matching phone number.
 # TODO Delete spaces from user input.
@@ -248,14 +253,17 @@ def phone_check():
         phonenumber = re.sub(r"[^0-9]", '', phonenumber)
 
         # Adding dashes for error feedback/readability.
-        # TODO Length based output here.
         p = phonenumber
-        p = '-'.join([p[:3], p[3:6], p[6:]])
 
+        if len(p) > 3:
+            p = '-'.join([p[:3]])
+        if len(p) > 6:
+            p = '-'.join([p[:3], p[3:6], p[6:]])
         if len(phonenumber) != 10:
-            return "%s is not a valid phone number." %p
+            print("Invalid phone number: %s" %p)
+            return "<span style='color: red;'>%s</span> is not a valid phone number." %p
 
-        print("Beginning search for phone number %s" %phonenumber)
+        print("Beginning search for phone number %s" %p)
              
         npireturns_all = ""
         con = sqlite3.connect(db)
@@ -269,7 +277,8 @@ def phone_check():
         con.close()
         logging.debug('Phone# SQL Query end %s %s' %(today,current_time))
         if len(rows) == 0:
-            return "NO RESULTS FOUND FOR %s" %p
+            print("No results")
+            return "<span style='color: red;'>No results found</span> for phone number: %s" %p
 
         # For each entry that had a matching phone number.
         for row in rows:
@@ -392,7 +401,8 @@ def phone_check():
 
                         # Local NPPES SQL DB returned no rows, therefore no matching doctor by given NPI number.
                         if len(npirows) == 0:
-                            return "NO RESULTS FOUND FOR %s" %p
+                            print("No results")
+                            return "<span style='color: red;'>No results found</span> for phone number: %s" %p
                         # Local NPPES SQL DB returned rows, check for PECOS data mathcing given NPI.
                         else:
                             # No matching local PECOS data found for given NPI, set PECOS data as empty.
@@ -482,7 +492,8 @@ def phone_check():
 
                     # Local NPPES SQL DB returned no rows, therefore no matching doctor by given NPI number.
                     if len(npirows) == 0:
-                        return "NO RESULTS FOUND FOR %s" %p
+                        print("No results")
+                        return "<span style='color: red;'>No results found</span> for phone number: %s" %p
                     # Local NPPES SQL DB returned rows, check for PECOS data mathcing given NPI.
                     else:
                         # No matching local PECOS data found for given NPI, set PECOS data as empty.
@@ -521,6 +532,7 @@ def phone_check():
 # API to check for matching doctor name.
 @npi_app.route('/doc_check', methods=['POST'])
 def doc_check():
+
     # Local variables
     isLocal = 0
     logcount = 1
@@ -544,7 +556,15 @@ def doc_check():
 
     # Doctor name must be at least 3 letters.
     if "DOCTORNAME" in request.form and len(request.form['DOCTORNAME']) > 3:
-        if " " not in request.form['DOCTORNAME']:
+
+        # Sanitizing input:
+        # Removes extra (>1) spaces from middle of the string if they exist.
+        # Strips beginning and end of string of spaces.
+        # "  Hello     World   " -> "Hello World"
+        doc_input = ' '.join(request.form["DOCTORNAME"].split())
+
+        # If only last name is provided (no spaces), do last name query.
+        if " " not in doc_input:
             DOCTOR_LASTNAME = re.sub(r"[^a-zA-Z0-9]", "",request.form["DOCTORNAME"].upper()) # Only last name given
             print("Beginning name search | Last name: %s" %(DOCTOR_LASTNAME))
             if "STATE" in request.form and len(request.form['STATE']) > 1:
@@ -582,9 +602,17 @@ def doc_check():
                     rows = cur.fetchall()
                     con.close()
         else:
-            DOCTORFULLNAME = request.form["DOCTORNAME"].split(" ")
+            # Removes extra spaces from beginning, middle, and end of name.
+            doc_full = ' '.join(request.form["DOCTORNAME"].split())
+
+            # Splits by the remaining single space left between the names.
+            DOCTORFULLNAME = doc_full.split(" ")
+
+            # API is case sensitive, needs upper here.
+            # String anything that isn't a character.
             DOCTOR_FIRSTNAME = re.sub(r"[^a-zA-Z0-9]", "",DOCTORFULLNAME[0].upper())
             DOCTOR_LASTNAME = re.sub(r"[^a-zA-Z0-9]", "",DOCTORFULLNAME[1].upper())
+
             if "STATE" in request.form and len(request.form['STATE']) > 1:
                 DOC_STATE = re.sub(r"[^a-zA-Z0-9]", "",request.form['STATE'].upper())
                 print("Beginning name search | Full name + State: %s %s - %s" %(DOCTOR_FIRSTNAME,DOCTOR_LASTNAME,DOC_STATE))
@@ -623,7 +651,7 @@ def doc_check():
 
         if response['result_count'] == 0 and isLocal == 0 or (len(rows) == 0 and isLocal == 1):
             print("No results")
-            return "No doctor found by the name '%s %s'" %(DOCTOR_FIRSTNAME,DOCTOR_LASTNAME)
+            return "<span style='color: red;'>No doctor found</span> by the name '%s %s'" %(DOCTOR_FIRSTNAME,DOCTOR_LASTNAME)
 
         # NPPES API Down
         else:
@@ -745,7 +773,7 @@ def doc_check():
                                 # Local NPPES SQL DB returned no rows, therefore no matching doctor by given NPI number.
                                 if len(npirows) == 0:
                                     print("No results")
-                                    return "No doctor found by the name '%s %s'" %(DOCTOR_FIRSTNAME,DOCTOR_LASTNAME)
+                                    return "<span style='color: red;'>No doctor found</span> by the name '%s %s'" %(DOCTOR_FIRSTNAME,DOCTOR_LASTNAME)
 
                                 # Local NPPES SQL DB returned rows, check for PECOS data mathcing given NPI.
                                 else:
@@ -837,7 +865,7 @@ def doc_check():
                             # Local NPPES SQL DB returned no rows, therefore no matching doctor by given NPI number.
                             if len(npirows) == 0:
                                 print("No results")
-                                return "No doctor found by the name '%s %s'" %(DOCTOR_FIRSTNAME,DOCTOR_LASTNAME)
+                                return "<span style='color: red;'>No doctor found</span> by the name '%s %s'" %(DOCTOR_FIRSTNAME,DOCTOR_LASTNAME)
                             # Local NPPES SQL DB returned rows, check for PECOS data mathcing given NPI.
                             else:
                                 # No matching local PECOS data found for given NPI, set PECOS data as empty.
@@ -1116,7 +1144,7 @@ def doc_check():
                 return resp
     # Doctor name was less than 3 letters.
     else:
-        return "Doctor Name must be at least 3 letters"
+        return "<span style='color: red;'>Doctor Name must be at least 3 letters</span>"
 
 # Helper function for formatting SQL returns (NPPES API down).
 def rows_formatting(pecosdata, rows, x):
@@ -1274,3 +1302,4 @@ def npi():
 if __name__ == '__main__':
     npi_app.run(host='74.103.169.112', port=5755, threads=8, debug=True)
     #npi_app.run(host='0.0.0.0', port=5755, threads=8, debug=True)
+    #npi_app.run(host='0.0.0.0', port=5755, debug=True)

@@ -308,7 +308,7 @@
 
       if ($('#NPINUMBER').val() == null || $('#NPINUMBER').val() == "") {
         $('#msg').show();
-        $("#msg").html("NPINUMBER is required field.").css("color", "red");
+        $("#msg").html("<span style='color: red;'>NPI field is blank.</span>");
       } else {
         $.ajax({
           type: "POST",
@@ -340,7 +340,7 @@
 
       if ($('#PHONENUMBER').val() == null || $('#PHONENUMBER').val() == "") {
         $('#msg').show();
-        $("#msg").html("PHONENUMBER is required field.").css("color", "red");
+        $("#msg").html("<span style='color: red;'>Phone number field is blank.</span>")
       } else {
         $.ajax({
           type: "POST",
@@ -372,7 +372,7 @@
 
       if ($('#DOCTORNAME').val() == null || $('#DOCTORNAME').val() == "") {
         $('#msg').show();
-        $("#msg").html("DOCTORNAME is required field.").css("color", "red");
+        $("#msg").html("<span style='color: red;'>Doctor Name filed is blank.</span>")
       } else {
         $.ajax({
           type: "POST",

@@ -248,17 +248,19 @@ def phone_check():
 
     # If phone number is between 10 and 12 digits continue.
     if "PHONENUMBER" in request.form:
+
         # User input -> Phone number stripped of anything but digits.
         phonenumber = request.form['PHONENUMBER']
         phonenumber = re.sub(r"[^0-9]", '', phonenumber)
-
-        # Adding dashes for error feedback/readability.
         p = phonenumber
 
-        if len(p) > 3:
-            p = '-'.join([p[:3]])
-        if len(p) > 6:
-            p = '-'.join([p[:3], p[3:6], p[6:]])
+        # Add dashes for user feedback and readability
+        if len(phonenumber) > 3 and len(phonenumber) <=6:
+            p = phonenumber
+            p = '-'.join([phonenumber[0:3],phonenumber[3:]])
+        if len(phonenumber) > 6:
+            p = phonenumber
+            p = '-'.join([phonenumber[:3], phonenumber[3:6], phonenumber[6:]])
         if len(phonenumber) != 10:
             print("Invalid phone number: %s" %p)
             return "<span style='color: red;'>%s</span> is not a valid phone number." %p

@@ -1294,6 +1294,7 @@ def set_headers():
 
 # TODO Make this the hopepage in addition.
 # Post landing page.
+@npi_app.route('/', methods=['POST', 'GET'])
 @npi_app.route('/npi', methods=['POST', 'GET'])
 def npi():
     logging.debug('Web Landing Page accessed')

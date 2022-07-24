@@ -557,7 +557,7 @@ def doc_check():
     headers = set_headers()
 
     # Doctor name must be at least 3 letters.
-    if "DOCTORNAME" in request.form and len(request.form['DOCTORNAME']) > 3:
+    if "DOCTORNAME" in request.form and len(request.form['DOCTORNAME']) > 2:
 
         # Sanitizing input:
         # Removes extra (>1) spaces from middle of the string if they exist.

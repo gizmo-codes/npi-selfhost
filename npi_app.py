@@ -49,7 +49,7 @@ def npi_check():
 
         # NPI numbers are required to be exactly 10 digits.
         if len(npinumber) != 10:
-            logging.error('%s NPINUMBER was not 10 digits' %npinumber)
+            logging.error('NPINUMBER was not 10 digits')
             print("Invalid NPI number [%s]: %s digits provided." %(npinumber,len(npinumber)))
             return "<span style='color: red;'>NPI number must be exactly 10 digits</span>.<br>You provided [%s]: %s digits." %(npinumber,len(npinumber))
 
@@ -220,7 +220,7 @@ def npi_check():
                         return resp
     else:
         npinumber = request.form['NPINUMBER']
-        logging.error('%s NPINUMBER was not 10 digits' %npinumber)
+        logging.error('NPINUMBER was not 10 digits')
         print("Invalid NPI number [%s]: %s digits provided." %(npinumber,len(npinumber)))
         return "<span style='color: red;'>NPI number must be exactly 10 digits</span>.<br>You provided [%s]: %s digits." %(npinumber,len(npinumber))
 
@@ -568,6 +568,8 @@ def doc_check():
         # If only last name is provided (no spaces), do last name query.
         if " " not in doc_input:
             DOCTOR_LASTNAME = re.sub(r"[^a-zA-Z0-9]", "",request.form["DOCTORNAME"].upper()) # Only last name given
+            if len(DOCTOR_LASTNAME) == 0:
+                return "<span style='color: red;'>Stop</span> inputting emojis <b>Spencer</b> 😠"
             print("Beginning name search | Last name: %s" %(DOCTOR_LASTNAME))
             if "STATE" in request.form and len(request.form['STATE']) > 1:
                 DOC_STATE = re.sub(r"[^a-zA-Z0-9]", "",request.form['STATE'].upper())

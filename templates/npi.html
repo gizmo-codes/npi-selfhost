@@ -312,7 +312,7 @@
       } else {
         $.ajax({
           type: "POST",
-          url: "http://74.103.169.112:5755/npi_check",
+          url: "https://74.103.169.112:5755/npi_check",
           data: $('#NPIChecker').serialize(),
           dataType: "html",
           cache: false,
@@ -344,7 +344,7 @@
       } else {
         $.ajax({
           type: "POST",
-          url: "http://74.103.169.112:5755/phone_check",
+          url: "https://74.103.169.112:5755/phone_check",
           data: $('#NPIChecker').serialize(),
           dataType: "html",
           cache: false,
@@ -376,7 +376,7 @@
       } else {
         $.ajax({
           type: "POST",
-          url: "http://74.103.169.112:5755/doc_check",
+          url: "https://74.103.169.112:5755/doc_check",
           data: $('#NPIChecker').serialize(),
           dataType: "html",
           cache: false,
@@ -402,7 +402,7 @@
 </head>
 
 <body>
-  <form id="NPIChecker" class="NPIChecker" method="POST" action="http://74.103.169.112:5755">
+  <form id="NPIChecker" class="NPIChecker" method="POST" action="https://74.103.169.112:5755">
     <fieldset>
       <legend> <b>NPI Checker</b> </legend>
       <div class="msg" id="msg"></div>

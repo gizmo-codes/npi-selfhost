@@ -627,7 +627,7 @@ def doc_check():
             if DOC_STATE:
                 return "<span style='color: red;'><b>No doctor found</b></span> by the name '<b>%s %s</b>' in '<b>%s</b>'" %(DOCTOR_FIRSTNAME,DOCTOR_LASTNAME, DOC_STATE)
             else:
-                return "<span style='color: red;'><b>No doctor found<b></span> by the name '<b>%s %s</b>'" %(DOCTOR_FIRSTNAME,DOCTOR_LASTNAME)
+                return "<span style='color: red;'><b>No doctor found</b></span> by the name '<b>%s %s</b>'" %(DOCTOR_FIRSTNAME,DOCTOR_LASTNAME)
 
         # NPPES API Down
         else:
@@ -752,7 +752,7 @@ def doc_check():
                                     if DOC_STATE:
                                         return "<span style='color: red;'><b>No doctor found</b></span> by the name '<b>%s %s</b>' in '<b>%s</b>'" %(DOCTOR_FIRSTNAME,DOCTOR_LASTNAME, DOC_STATE)
                                     else:
-                                        return "<span style='color: red;'><b>No doctor found<b></span> by the name '<b>%s %s</b>'" %(DOCTOR_FIRSTNAME,DOCTOR_LASTNAME)
+                                        return "<span style='color: red;'><b>No doctor found</b></span> by the name '<b>%s %s</b>'" %(DOCTOR_FIRSTNAME,DOCTOR_LASTNAME)
 
                                 # Local NPPES SQL DB returned rows, check for PECOS data mathcing given NPI.
                                 else:
@@ -839,7 +839,7 @@ def doc_check():
                                 if DOC_STATE:
                                     return "<span style='color: red;'><b>No doctor found</b></span> by the name '<b>%s %s</b>' in '<b>%s</b>'" %(DOCTOR_FIRSTNAME,DOCTOR_LASTNAME, DOC_STATE)
                                 else:
-                                    return "<span style='color: red;'><b>No doctor found<b></span> by the name '<b>%s %s</b>'" %(DOCTOR_FIRSTNAME,DOCTOR_LASTNAME)
+                                    return "<span style='color: red;'><b>No doctor found</b></span> by the name '<b>%s %s</b>'" %(DOCTOR_FIRSTNAME,DOCTOR_LASTNAME)
                             # Local NPPES SQL DB returned rows, check for PECOS data mathcing given NPI.
                             else:
                                 # No matching local PECOS data found for given NPI, set PECOS data as empty.

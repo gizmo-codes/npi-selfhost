@@ -12,7 +12,7 @@ import sqlite3
 
 #TODO: double space between names makes it broken
 
-logging.basicConfig(filename='npi.log', level=logging.DEBUG)
+logging.basicConfig(filename='npi.log', format='%(asctime)s %(message)s', level=logging.DEBUG)
 logging.debug('Program initialized')
 
 # Set database path.
@@ -28,12 +28,10 @@ def npi_check():
     isLocal = 0
     x = 0
     rows = {}
-    today = date.today()
 
-    # Time stamps for logging/output.
+    # Start time for logging/output.
     st = time.time()
-    current_time = get_time()
-    logging.debug('npi_check Begun %s %s' %(today,current_time))
+    logging.debug('npi_check Begun')
 
     # Headers for API calls.
     headers = set_headers()
@@ -51,7 +49,7 @@ def npi_check():
         if len(npinumber) != 10:
             logging.error('NPINUMBER was not 10 digits')
             print("Invalid NPI number [%s]: %s digits provided." %(npinumber,len(npinumber)))
-            return "<span style='color: red;'>NPI number must be exactly 10 digits</span>.<br>You provided [%s]: %s digits." %(npinumber,len(npinumber))
+            return "<span style='color: red;'>NPI number must be <b>exactly 10 digits</b></span>.<br>You provided [%s]: %s digits." %(npinumber,len(npinumber))
 
         # Log Feedback
         print("Beginning search for NPI: %s" %(npinumber))
@@ -68,11 +66,9 @@ def npi_check():
             isLocal = 1
             con = sqlite3.connect(db)
             cur = con.cursor()
-            current_time = get_time()
-            logging.debug('NPPES NPI SQL Query start %s %s' %(today,current_time))
+            logging.debug('NPPES NPI SQL Query start')
             cur.execute("select * from npi where NPI=%s" %(npinumber))
-            current_time = get_time()
-            logging.debug('NPPES NPI SQL Query end %s %s' %(today,current_time))
+            logging.debug('NPPES NPI SQL Query end')
             rows = cur.fetchall()
             con.close()
 
@@ -103,11 +99,9 @@ def npi_check():
             else:
                 print("-- NPPES API DOWN --\n-- Using local NPPES data... --\n")
                 npireturns = rows_formatting(pecosdata,rows,x)
-            et = time.time()
-            elapsed_time = et - st
+            elapsed_time = query_time(st)
             resp = jsonify('<table id=respTable><thead><tr id=sticky><th>NPI</th><th class=fitwidth>Name</th><th>Credential</th><th class=fitwidth>Practice #</th><th class=fitwidth>Mailing #</th><th class=fitwidth>Fax</th><th>Primary Practice</th><th>Mailing Address</th><th class=fitwidth>Other Practice</th><th>PECOS</th><th class=maxwidth>Email</th></tr></thead>' + npireturns + '</table><br><font color=red>Execution Time: ' + str(round(elapsed_time,2)) + ' seconds</font>')
-            current_time = get_time()
-            logging.debug('npi_check End %s %s' %(today,current_time))
+            logging.debug('npi_check End')
             #print("npi_check end")
             print("Adding Healthcare Worker [ID: "+str(npinumber)+"]")
             print("Data complete")
@@ -123,20 +117,18 @@ def npi_check():
                 # Grab PECOS data from local SQL DB.
                 con = sqlite3.connect(db)
                 cur = con.cursor()
-                logging.debug('NPI SQL Query start %s %s' %(today,current_time))
+                logging.debug('NPI SQL Query start')
                 cur.execute("select * from pecos where [NPI]=%s" %(npinumber))
-                logging.debug('NPI SQL Query end %s %s' %(today,current_time))
+                logging.debug('NPI SQL Query end')
                 pecosrows = cur.fetchall()
 
                 # Local PECOS SQL DB returned no rows, send DME of "NO" for current NPI hit from NPPES.
                 if len(pecosrows) == 0:
                     pecos = {'DME': "NO", 'NPI': npinumber}
                     npireturns = resp_formatting(pecos, response, x)
-                    et = time.time()
-                    elapsed_time = et - st
+                    elapsed_time = query_time(st)
                     resp = jsonify('<table id=respTable><thead><tr id=sticky><th>NPI</th><th class=fitwidth>Name</th><th>Credential</th><th class=fitwidth>Practice #</th><th class=fitwidth>Mailing #</th><th class=fitwidth>Fax</th><th>Primary Practice</th><th>Mailing Address</th><th class=fitwidth>Other Practice</th><th>PECOS</th><th class=maxwidth>Email</th></tr></thead>' + npireturns + '</table><br><font color=red>Execution Time: ' + str(round(elapsed_time,2)) + ' seconds</font>')
-                    current_time = get_time()
-                    logging.debug('npi_check End %s %s' %(today,current_time))
+                    logging.debug('npi_check End')
                     print("Adding Healthcare Worker [ID: "+str(npinumber)+"]")
                     print("Data complete")
 
@@ -151,11 +143,9 @@ def npi_check():
                             else:
                                 pecos = {'DME': "NO", 'NPI': npinumber}
                     npireturns = resp_formatting(pecos,response,x)
-                    et = time.time()
-                    elapsed_time = et - st
+                    elapsed_time = query_time(st)
                     resp = jsonify('<table id=respTable><thead><tr id=sticky><th>NPI</th><th class=fitwidth>Name</th><th>Credential</th><th class=fitwidth>Practice #</th><th class=fitwidth>Mailing #</th><th class=fitwidth>Fax</th><th>Primary Practice</th><th>Mailing Address</th><th class=fitwidth>Other Practice</th><th>PECOS</th><th class=maxwidth>Email</th></tr></thead>' + npireturns + '</table><br><font color=red>Execution Time: ' + str(round(elapsed_time,2)) + ' seconds</font>')
-                    current_time = get_time()
-                    logging.debug('npi_check End %s %s' %(today,current_time))
+                    logging.debug('npi_check End')
                     print("Adding Healthcare Worker [ID: "+str(npinumber)+"]")
                     print("Data complete")
 
@@ -167,16 +157,14 @@ def npi_check():
                 # Grab NPPES and PECOS from local SQL DB.
                 con = sqlite3.connect(db)
                 cur = con.cursor()
-                current_time = get_time()
-                logging.debug('NPPES & PECOS NPI SQL Query start %s %s' %(today,current_time))
+                logging.debug('NPPES & PECOS NPI SQL Query start')
                 # NPPES data.
                 cur.execute("select * from npi where [NPI]=%s" %(npinumber))
                 npirows = cur.fetchall()
                 # PECOS data.
                 cur.execute("select * from pecos where [NPI]=%s" %(npinumber))
                 pecosrows = cur.fetchall()
-                current_time = get_time()
-                logging.debug('NPPES & PECOS NPI SQL Query end %s %s' %(today,current_time))
+                logging.debug('NPPES & PECOS NPI SQL Query end')
 
                 # Local NPPES SQL DB returned no rows, therefore no matching doctor by given NPI number.
                 if len(npirows) == 0:
@@ -188,11 +176,9 @@ def npi_check():
                     if len(pecosrows) == 0:
                         pecosdata = {}
                         npireturns = rows_formatting(pecosdata, npirows, x)
-                        et = time.time()
-                        elapsed_time = et - st
+                        elapsed_time = query_time(st)
                         resp = jsonify('<table id=respTable><thead><tr id=sticky><th>NPI</th><th class=fitwidth>Name</th><th>Credential</th><th class=fitwidth>Practice #</th><th class=fitwidth>Mailing #</th><th class=fitwidth>Fax</th><th>Primary Practice</th><th>Mailing Address</th><th class=fitwidth>Other Practice</th><th>PECOS</th><th class=maxwidth>Email</th></tr></thead>' + npireturns + '</table><br><font color=red>Execution Time: ' + str(round(elapsed_time,2)) + ' seconds</font>')
-                        current_time = get_time()
-                        logging.debug('npi_check End %s %s' %(today,current_time))
+                        logging.debug('npi_check End')
                         print("Adding Healthcare Worker [ID: "+str(npinumber)+"]")
                         print("Data complete")
                         return resp
@@ -206,14 +192,11 @@ def npi_check():
                             else:
                                 pecos = {'DME': "NO", 'NPI': npinumber}
                         npireturns = rows_formatting(pecos,npirows,x)
-                        et = time.time()
-                        elapsed_time = et - st
+                        elapsed_time = query_time(st)
                         resp = jsonify('<table id=respTable><thead><tr id=sticky><th>NPI</th><th class=fitwidth>Name</th><th>Credential</th><th class=fitwidth>Practice #</th><th class=fitwidth>Mailing #</th><th class=fitwidth>Fax</th><th>Primary Practice</th><th>Mailing Address</th><th class=fitwidth>Other Practice</th><th>PECOS</th><th class=maxwidth>Email</th></tr></thead>' + npireturns + '</table><br><font color=red>Execution Time: ' + str(round(elapsed_time,2)) + ' seconds</font>')
                         #resp = jsonify('<table>' + npireturns + '</table><br><font color=red>Elapsed Time: ' + str(elapsed_time) + ' seconds</font>')
-                        now = datetime.now()
-                        current_time = now.strftime("%H:%M:%S")
-                        logging.debug('npi_check End %s %s' %(today,current_time))
 
+                        logging.debug('npi_check End')
                         print("Adding Healthcare Worker [ID: "+str(npinumber)+"]")
                         print("Data complete")
 
@@ -222,7 +205,7 @@ def npi_check():
         npinumber = request.form['NPINUMBER']
         logging.error('NPINUMBER was not 10 digits')
         print("Invalid NPI number [%s]: %s digits provided." %(npinumber,len(npinumber)))
-        return "<span style='color: red;'>NPI number must be exactly 10 digits</span>.<br>You provided [%s]: %s digits." %(npinumber,len(npinumber))
+        return "<span style='color: red;'>NPI number must be <b>exactly 10 digits</b></span>.<br>You provided [%s]: %s digits." %(npinumber,len(npinumber))
 
 # API to check matching phone number.
 # TODO Delete spaces from user input.
@@ -237,11 +220,9 @@ def phone_check():
     logcount = 1
     rows = {}
 
-    # Time stamps for logging/output.
+    # Start time for logging/output.
     st = time.time()
-    today = date.today()
-    current_time = get_time()
-    logging.debug('phone_check Begun %s %s' %(today,current_time))
+    logging.debug('phone_check Begun')
 
     # Headers for API calls.
     headers = set_headers()
@@ -270,14 +251,14 @@ def phone_check():
         npireturns_all = ""
         con = sqlite3.connect(db)
         cur = con.cursor()
-        current_time = get_time()
-        logging.debug('Phone# SQL Query start %s %s' %(today,current_time))
+        
+        logging.debug('Phone# SQL Query start')
         cur.execute("select * from npi where [Provider Business Mailing Address Telephone Number]=%s OR [Provider Business Practice Location Address Telephone Number]=%s" %(phonenumber,phonenumber))
         rows = cur.fetchall()
         con.close()
-        current_time = get_time()
+        
         con.close()
-        logging.debug('Phone# SQL Query end %s %s' %(today,current_time))
+        logging.debug('Phone# SQL Query end')
         if len(rows) == 0:
             print("No results")
             return "<span style='color: red;'>No results found</span> for phone number: %s" %p
@@ -340,8 +321,8 @@ def phone_check():
                         print("-- NPPES API DOWN --\n-- Using local NPPES data... --\n")
                         npireturns = rows_formatting(pecosdata,rows,x)
                         x = x + 1
-                    current_time = get_time()
-                    logging.debug('Appending data... [%s] %s %s' %(logcount,today,current_time))
+                    
+                    logging.debug('Appending data... [%s]' %logcount)
                     logcount = logcount+1
                     npireturns_all = npireturns_all + npireturns
 
@@ -357,7 +338,7 @@ def phone_check():
                         # Grab PECOS data from local SQL DB.
                         con = sqlite3.connect(db)
                         cur = con.cursor()
-                        logging.debug('SQL Query start %s %s' %(today,current_time))
+                        logging.debug('SQL Query start')
                         cur.execute("select * from pecos where [NPI]=%s" %(npinumber))
                         pecosrows = cur.fetchall()
 
@@ -365,8 +346,8 @@ def phone_check():
                         if len(pecosrows) == 0:
                             pecos = {'DME': "NO", 'NPI': npinumber}
                             npireturns = resp_formatting(pecos, response, x)
-                            current_time = get_time()
-                            logging.debug('Appending data... [%s] %s %s' %(logcount,today,current_time))
+                            
+                            logging.debug('Appending data... [%s]' %logcount)
                             logcount = logcount+1
                             npireturns_all = npireturns_all + npireturns
 
@@ -380,8 +361,8 @@ def phone_check():
                                     else:
                                         pecos = {'DME': "NO", 'NPI': npinumber}
                             npireturns = resp_formatting(pecos,response,x)
-                            current_time = get_time()
-                            logging.debug('Appending data... [%s] %s %s' %(logcount,today,current_time))
+                            
+                            logging.debug('Appending data... [%s]' %logcount)
                             logcount = logcount+1
                             npireturns_all = npireturns_all + npireturns
                             
@@ -412,8 +393,8 @@ def phone_check():
                                 pecosdata = {}
                                 npireturns = rows_formatting(pecosdata, npirows, x)
                                 x = x + 1
-                                current_time = get_time()
-                                logging.debug('Appending data... [%s] %s %s' %(logcount,today,current_time))
+                                
+                                logging.debug('Appending data... [%s]' %logcount)
                                 logcount = logcount+1
                                 npireturns_all = npireturns_all + npireturns
 
@@ -440,21 +421,17 @@ def phone_check():
                     # Grab PECOS data from local SQL DB.
                     con = sqlite3.connect(db)
                     cur = con.cursor()
-                    now = datetime.now()
-                    current_time = now.strftime("%H:%M:%S")
-                    logging.debug('PECOS SQL Query start %s %s' %(today,current_time))
+                    logging.debug('PECOS SQL Query start')
                     cur.execute("select * from pecos where [NPI]=%s" %(npinumber))
                     pecosrows = cur.fetchall()
-                    now = datetime.now()
-                    current_time = now.strftime("%H:%M:%S")
-                    logging.debug('PECOS SQL Query start %s %s' %(today,current_time))
+                    logging.debug('PECOS SQL Query start')
 
                     # Local PECOS SQL DB returned no rows, send DME of "NO" for current NPI hit from NPPES.
                     if len(pecosrows) == 0:
                         pecos = {'DME': "NO", 'NPI': npinumber}
                         npireturns = resp_formatting(pecos, response, x)
-                        current_time = get_time()
-                        logging.debug('Appending data... [%s] %s %s' %(logcount,today,current_time))
+                        
+                        logging.debug('Appending data... [%s]' %logcount)
                         logcount = logcount+1
                         npireturns_all = npireturns_all + npireturns
 
@@ -468,8 +445,8 @@ def phone_check():
                                 else:
                                     pecos = {'DME': "NO", 'NPI': npinumber}
                         npireturns = resp_formatting(pecos,response,x)
-                        current_time = get_time()
-                        logging.debug('Appending data... [%s] %s %s' %(logcount,today,current_time))
+                        
+                        logging.debug('Appending data... [%s]' %logcount)
                         logcount = logcount+1
                         npireturns_all = npireturns_all + npireturns
 
@@ -480,17 +457,13 @@ def phone_check():
                     # Grab NPPES and PECOS from local SQL DB.
                     con = sqlite3.connect(db)
                     cur = con.cursor()
-                    now = datetime.now()
-                    current_time = now.strftime("%H:%M:%S")
-                    logging.debug('Local NPI & PECOS SQL Query start %s %s' %(today,current_time))
+                    logging.debug('Local NPI & PECOS SQL Query start')
                     # NPPES data.
                     npirows = rows
                     # PECOS data.
                     cur.execute("select * from pecos where [NPI]=%s" %(npinumber))
                     pecosrows = cur.fetchall()
-                    now = datetime.now()
-                    current_time = now.strftime("%H:%M:%S")
-                    logging.debug('Local NPI & PECOS SQL Query end %s %s' %(today,current_time))
+                    logging.debug('Local NPI & PECOS SQL Query end')
 
                     # Local NPPES SQL DB returned no rows, therefore no matching doctor by given NPI number.
                     if len(npirows) == 0:
@@ -517,17 +490,14 @@ def phone_check():
 
                             npireturns = rows_formatting(pecos,npirows,x)
                             x = x + 1
-                            current_time = get_time()
-                            logging.debug('Appending data... [%s] %s %s' %(logcount,today,current_time))
+                            
+                            logging.debug('Appending data... [%s]' %logcount)
                             logcount = logcount+1
                             npireturns_all = npireturns_all + npireturns
 
         print("Data complete\nDisplaying",count-1,"healthcare workers.")
-        now = datetime.now()
-        current_time = now.strftime("%H:%M:%S")
-        logging.debug('phone_check End %s %s' %(today,current_time))
-        et = time.time()
-        elapsed_time = et - st
+        logging.debug('phone_check End')
+        elapsed_time = query_time(st)
         resp = jsonify('<table id="respTable"><thead><tr id=sticky><th>NPI</th><th class=fitwidth>Name</th><th>Credential</th><th class=fitwidth>Practice #</th><th class=fitwidth>Mailing #</th><th class=fitwidth>Fax</th><th>Primary Practice</th><th>Mailing Address</th><th class=fitwidth>Other Practice</th><th>PECOS</th><th class=maxwidth>Email</th></tr></thead>' + npireturns_all + '</table><br><font color=red>Execution Time: ' + str(round(elapsed_time,2)) + ' seconds</font>')
         return resp
 
@@ -546,12 +516,11 @@ def doc_check():
     npireturns_all = ""
     DOCTOR_FIRSTNAME = ""
     DOCTOR_LASTNAME = ""
+    DOC_STATE = ""
 
-    # Time stamps for logging/output.
+    # Start time for logging/output.
     st = time.time()
-    today = date.today()
-    current_time = get_time()
-    logging.debug('doc_check Begun %s %s' %(today,current_time))
+    logging.debug('doc_check Begun')
 
     # Headers for API calls.
     headers = set_headers()
@@ -655,7 +624,10 @@ def doc_check():
 
         if response['result_count'] == 0 and isLocal == 0 or (len(rows) == 0 and isLocal == 1):
             print("No results")
-            return "<span style='color: red;'>No doctor found</span> by the name '%s %s'" %(DOCTOR_FIRSTNAME,DOCTOR_LASTNAME)
+            if DOC_STATE:
+                return "<span style='color: red;'><b>No doctor found</b></span> by the name '<b>%s %s</b>' in '<b>%s</b>'" %(DOCTOR_FIRSTNAME,DOCTOR_LASTNAME, DOC_STATE)
+            else:
+                return "<span style='color: red;'><b>No doctor found<b></span> by the name '<b>%s %s</b>'" %(DOCTOR_FIRSTNAME,DOCTOR_LASTNAME)
 
         # NPPES API Down
         else:
@@ -715,8 +687,8 @@ def doc_check():
                                 print("-- NPPES API DOWN --\n-- Using local NPPES data... --\n")
                                 npireturns = rows_formatting(pecosdata,rows,x)
                                 x = x + 1
-                            current_time = get_time()
-                            logging.debug('Appending data... [%s] %s %s' %(logcount,today,current_time))
+                            
+                            logging.debug('Appending data... [%s]' %logcount)
                             logcount = logcount+1
                             npireturns_all = npireturns_all + npireturns
 
@@ -732,7 +704,7 @@ def doc_check():
                                 # Grab PECOS data from local SQL DB.
                                 con = sqlite3.connect(db)
                                 cur = con.cursor()
-                                logging.debug('SQL Query start %s %s' %(today,current_time))
+                                logging.debug('SQL Query start')
                                 cur.execute("select * from pecos where [NPI]=%s" %(npinumber))
                                 pecosrows = cur.fetchall()
 
@@ -740,8 +712,8 @@ def doc_check():
                                 if len(pecosrows) == 0:
                                     pecos = {'DME': "NO", 'NPI': npinumber}
                                     npireturns = resp_formatting(pecos, response, x)
-                                    current_time = get_time()
-                                    logging.debug('Appending data... [%s] %s %s' %(logcount,today,current_time))
+                                    
+                                    logging.debug('Appending data... [%s]' %logcount)
                                     logcount = logcount+1
                                     npireturns_all = npireturns_all + npireturns
 
@@ -755,8 +727,8 @@ def doc_check():
                                             else:
                                                 pecos = {'DME': "NO", 'NPI': npinumber}
                                     npireturns = resp_formatting(pecos,response,x)
-                                    current_time = get_time()
-                                    logging.debug('Appending data... [%s] %s %s' %(logcount,today,current_time))
+                                    
+                                    logging.debug('Appending data... [%s]' %logcount)
                                     logcount = logcount+1
                                     npireturns_all = npireturns_all + npireturns
 
@@ -777,7 +749,10 @@ def doc_check():
                                 # Local NPPES SQL DB returned no rows, therefore no matching doctor by given NPI number.
                                 if len(npirows) == 0:
                                     print("No results")
-                                    return "<span style='color: red;'>No doctor found</span> by the name '%s %s'" %(DOCTOR_FIRSTNAME,DOCTOR_LASTNAME)
+                                    if DOC_STATE:
+                                        return "<span style='color: red;'><b>No doctor found</b></span> by the name '<b>%s %s</b>' in '<b>%s</b>'" %(DOCTOR_FIRSTNAME,DOCTOR_LASTNAME, DOC_STATE)
+                                    else:
+                                        return "<span style='color: red;'><b>No doctor found<b></span> by the name '<b>%s %s</b>'" %(DOCTOR_FIRSTNAME,DOCTOR_LASTNAME)
 
                                 # Local NPPES SQL DB returned rows, check for PECOS data mathcing given NPI.
                                 else:
@@ -786,8 +761,8 @@ def doc_check():
                                         pecosdata = {}
                                         npireturns = rows_formatting(pecosdata, npirows, x)
                                         x = x + 1
-                                        current_time = get_time()
-                                        logging.debug('Appending data... [%s] %s %s' %(logcount,today,current_time))
+                                        
+                                        logging.debug('Appending data... [%s]' %logcount)
                                         logcount = logcount+1
                                         npireturns_all = npireturns_all + npireturns
 
@@ -814,21 +789,17 @@ def doc_check():
                             # Grab PECOS data from local SQL DB.
                             con = sqlite3.connect(db)
                             cur = con.cursor()
-                            now = datetime.now()
-                            current_time = now.strftime("%H:%M:%S")
-                            logging.debug('PECOS SQL Query start %s %s' %(today,current_time))
+                            logging.debug('PECOS SQL Query start')
                             cur.execute("select * from pecos where [NPI]=%s" %(npinumber))
                             pecosrows = cur.fetchall()
-                            now = datetime.now()
-                            current_time = now.strftime("%H:%M:%S")
-                            logging.debug('PECOS SQL Query start %s %s' %(today,current_time))
+                            logging.debug('PECOS SQL Query start')
 
                             # Local PECOS SQL DB returned no rows, send DME of "NO" for current NPI hit from NPPES.
                             if len(pecosrows) == 0:
                                 pecos = {'DME': "NO", 'NPI': npinumber}
                                 npireturns = resp_formatting(pecos, response, x)
-                                current_time = get_time()
-                                logging.debug('Appending data... [%s] %s %s' %(logcount,today,current_time))
+                                
+                                logging.debug('Appending data... [%s]' %logcount)
                                 logcount = logcount+1
                                 npireturns_all = npireturns_all + npireturns
 
@@ -842,8 +813,8 @@ def doc_check():
                                         else:
                                             pecos = {'DME': "NO", 'NPI': npinumber}
                                 npireturns = resp_formatting(pecos,response,x)
-                                current_time = get_time()
-                                logging.debug('Appending data... [%s] %s %s' %(logcount,today,current_time))
+                                
+                                logging.debug('Appending data... [%s]' %logcount)
                                 logcount = logcount+1
                                 npireturns_all = npireturns_all + npireturns
 
@@ -854,22 +825,21 @@ def doc_check():
                             # Grab NPPES and PECOS from local SQL DB.
                             con = sqlite3.connect(db)
                             cur = con.cursor()
-                            now = datetime.now()
-                            current_time = now.strftime("%H:%M:%S")
-                            logging.debug('Local NPI & PECOS SQL Query start %s %s' %(today,current_time))
+                            logging.debug('Local NPI & PECOS SQL Query start')
                             # NPPES data.
                             npirows = rows
                             # PECOS data.
                             cur.execute("select * from pecos where [NPI]=%s" %(npinumber))
                             pecosrows = cur.fetchall()
-                            now = datetime.now()
-                            current_time = now.strftime("%H:%M:%S")
-                            logging.debug('Local NPI & PECOS SQL Query end %s %s' %(today,current_time))
+                            logging.debug('Local NPI & PECOS SQL Query end')
 
                             # Local NPPES SQL DB returned no rows, therefore no matching doctor by given NPI number.
                             if len(npirows) == 0:
                                 print("No results")
-                                return "<span style='color: red;'>No doctor found</span> by the name '%s %s'" %(DOCTOR_FIRSTNAME,DOCTOR_LASTNAME)
+                                if DOC_STATE:
+                                    return "<span style='color: red;'><b>No doctor found</b></span> by the name '<b>%s %s</b>' in '<b>%s</b>'" %(DOCTOR_FIRSTNAME,DOCTOR_LASTNAME, DOC_STATE)
+                                else:
+                                    return "<span style='color: red;'><b>No doctor found<b></span> by the name '<b>%s %s</b>'" %(DOCTOR_FIRSTNAME,DOCTOR_LASTNAME)
                             # Local NPPES SQL DB returned rows, check for PECOS data mathcing given NPI.
                             else:
                                 # No matching local PECOS data found for given NPI, set PECOS data as empty.
@@ -891,17 +861,14 @@ def doc_check():
 
                                     npireturns = rows_formatting(pecos,npirows,x)
                                     x = x + 1
-                                    current_time = get_time()
-                                    logging.debug('Appending data... [%s] %s %s' %(logcount,today,current_time))
+                                    
+                                    logging.debug('Appending data... [%s]' %logcount)
                                     logcount = logcount+1
                                     npireturns_all = npireturns_all + npireturns
 
                 print("Data complete\nDisplaying",count-1,"healthcare workers.")
-                now = datetime.now()
-                current_time = now.strftime("%H:%M:%S")
-                logging.debug('phone_check End %s %s' %(today,current_time))
-                et = time.time()
-                elapsed_time = et - st
+                logging.debug('phone_check End')
+                elapsed_time = query_time(st)
                 resp = jsonify('<table id="respTable"><thead><tr id=sticky><th>NPI</th><th class=fitwidth>Name</th><th>Credential</th><th class=fitwidth>Practice #</th><th class=fitwidth>Mailing #</th><th class=fitwidth>Fax</th><th>Primary Practice</th><th>Mailing Address</th><th class=fitwidth>Other Practice</th><th>PECOS</th><th class=maxwidth>Email</th></tr></thead>' + npireturns_all + '</table><br><font color=red>Execution Time: ' + str(round(elapsed_time,2)) + ' seconds</font>')
                 return resp
 
@@ -960,8 +927,8 @@ def doc_check():
                                 print("-- NPPES API DOWN --\n-- Using local NPPES data... --\n")
                                 npireturns = rows_formatting(pecosdata,rows,x)
                                 x = x + 1
-                            current_time = get_time()
-                            logging.debug('Appending data... [%s] %s %s' %(logcount,today,current_time))
+                            
+                            logging.debug('Appending data... [%s]' %logcount)
                             logcount = logcount+1
                             npireturns_all = npireturns_all + npireturns
 
@@ -977,7 +944,7 @@ def doc_check():
                                 # Grab PECOS data from local SQL DB.
                                 con = sqlite3.connect(db)
                                 cur = con.cursor()
-                                logging.debug('SQL Query start %s %s' %(today,current_time))
+                                logging.debug('SQL Query start')
                                 cur.execute("select * from pecos where [NPI]=%s" %(npinumber))
                                 pecosrows = cur.fetchall()
 
@@ -985,8 +952,8 @@ def doc_check():
                                 if len(pecosrows) == 0:
                                     pecos = {'DME': "NO", 'NPI': npinumber}
                                     npireturns = resp_formatting(pecos, response, x)
-                                    current_time = get_time()
-                                    logging.debug('Appending data... [%s] %s %s' %(logcount,today,current_time))
+                                    
+                                    logging.debug('Appending data... [%s]' %logcount)
                                     logcount = logcount+1
                                     npireturns_all = npireturns_all + npireturns
 
@@ -1000,8 +967,8 @@ def doc_check():
                                             else:
                                                 pecos = {'DME': "NO", 'NPI': npinumber}
                                     npireturns = resp_formatting(pecos,response,x)
-                                    current_time = get_time()
-                                    logging.debug('Appending data... [%s] %s %s' %(logcount,today,current_time))
+                                    
+                                    logging.debug('Appending data... [%s]' %logcount)
                                     logcount = logcount+1
 
                             # Both NPPES and PECOS api down, use local (SQL) data for both.
@@ -1029,8 +996,8 @@ def doc_check():
                                         pecosdata = {}
                                         npireturns = rows_formatting(pecosdata, npirows, x)
                                         x = x + 1
-                                        current_time = get_time()
-                                        logging.debug('Appending data... [%s] %s %s' %(logcount,today,current_time))
+                                        
+                                        logging.debug('Appending data... [%s]' %logcount)
                                         logcount = logcount+1
                                         npireturns_all = npireturns_all + npireturns
 
@@ -1057,21 +1024,17 @@ def doc_check():
                             # Grab PECOS data from local SQL DB.
                             con = sqlite3.connect(db)
                             cur = con.cursor()
-                            now = datetime.now()
-                            current_time = now.strftime("%H:%M:%S")
-                            logging.debug('PECOS SQL Query start %s %s' %(today,current_time))
+                            logging.debug('PECOS SQL Query start')
                             cur.execute("select * from pecos where [NPI]=%s" %(npinumber))
                             pecosrows = cur.fetchall()
-                            now = datetime.now()
-                            current_time = now.strftime("%H:%M:%S")
-                            logging.debug('PECOS SQL Query start %s %s' %(today,current_time))
+                            logging.debug('PECOS SQL Query start')
 
                             # Local PECOS SQL DB returned no rows, send DME of "NO" for current NPI hit from NPPES.
                             if len(pecosrows) == 0:
                                 pecos = {'DME': "NO", 'NPI': npinumber}
                                 npireturns = resp_formatting(pecos, response, x)
-                                current_time = get_time()
-                                logging.debug('Appending data... [%s] %s %s' %(logcount,today,current_time))
+                                
+                                logging.debug('Appending data... [%s]' %logcount)
                                 logcount = logcount+1
                                 npireturns_all = npireturns_all + npireturns
 
@@ -1085,8 +1048,8 @@ def doc_check():
                                         else:
                                             pecos = {'DME': "NO", 'NPI': npinumber}
                                 npireturns = resp_formatting(pecos,response,x)
-                                current_time = get_time()
-                                logging.debug('Appending data... [%s] %s %s' %(logcount,today,current_time))
+                                
+                                logging.debug('Appending data... [%s]' %logcount)
                                 logcount = logcount+1
                                 npireturns_all = npireturns_all + npireturns
 
@@ -1097,17 +1060,13 @@ def doc_check():
                             # Grab NPPES and PECOS from local SQL DB.
                             con = sqlite3.connect(db)
                             cur = con.cursor()
-                            now = datetime.now()
-                            current_time = now.strftime("%H:%M:%S")
-                            logging.debug('Local NPI & PECOS SQL Query start %s %s' %(today,current_time))
+                            logging.debug('Local NPI & PECOS SQL Query start')
                             # NPPES data.
                             npirows = rows
                             # PECOS data.
                             cur.execute("select * from pecos where [NPI]=%s" %(npinumber))
                             pecosrows = cur.fetchall()
-                            now = datetime.now()
-                            current_time = now.strftime("%H:%M:%S")
-                            logging.debug('Local NPI & PECOS SQL Query end %s %s' %(today,current_time))
+                            logging.debug('Local NPI & PECOS SQL Query end')
 
                             # Local NPPES SQL DB returned no rows, therefore no matching doctor by given NPI number.
                             if len(npirows) == 0:
@@ -1133,22 +1092,19 @@ def doc_check():
 
                                     npireturns = rows_formatting(pecos,npirows,x)
                                     x = x + 1
-                                    current_time = get_time()
-                                    logging.debug('Appending data... [%s] %s %s' %(logcount,today,current_time))
+                                    
+                                    logging.debug('Appending data... [%s]' %logcount)
                                     logcount = logcount+1
                                     npireturns_all = npireturns_all + npireturns
 
                 print("Data complete\nDisplaying",count-1,"healthcare workers.")
-                now = datetime.now()
-                current_time = now.strftime("%H:%M:%S")
-                logging.debug('phone_check End %s %s' %(today,current_time))
-                et = time.time()
-                elapsed_time = et - st
+                logging.debug('phone_check End')
+                elapsed_time = query_time(st)
                 resp = jsonify('<table id="respTable"><thead><tr id=sticky><th>NPI</th><th class=fitwidth>Name</th><th>Credential</th><th class=fitwidth>Practice #</th><th class=fitwidth>Mailing #</th><th class=fitwidth>Fax</th><th>Primary Practice</th><th>Mailing Address</th><th class=fitwidth>Other Practice</th><th>PECOS</th><th class=maxwidth>Email</th></tr></thead>' + npireturns_all + '</table><br><font color=red>Execution Time: ' + str(round(elapsed_time,2)) + ' seconds</font>')
                 return resp
     # Doctor name was less than 3 letters.
     else:
-        return "<span style='color: red;'>Doctor Name must be at least 3 letters</span>"
+        return "<span style='color: red;'>Doctor Name must be <b>at least 3 letters</b></span>"
 
 # Helper function for formatting SQL returns (NPPES API down).
 def rows_formatting(pecosdata, rows, x):
@@ -1280,11 +1236,11 @@ def get_local_nppes_data():
 def get_local_pecos_data():
     print(".")
 
-# Helper function for current time.
-def get_time():
-    now = datetime.now()
-    current_time = now.strftime("%H:%M:%S")
-    return current_time
+# Helper function for time passed during query.
+def query_time(st):
+    et = time.time()
+    elapsed_time = et - st
+    return elapsed_time
 
 # Header helper function.
 def set_headers():

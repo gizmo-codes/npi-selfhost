@@ -1,7 +1,7 @@
 services:
   npiapp:
     container_name: npiapp
-    image: omzig7/npi:selfhost10
+    image: omzig7/npi:selfhost11
     environment:
       - PYTHONUNBUFFERED=1
       - COMPOSE_PROJECT_NAME=npi

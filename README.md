@@ -1,5 +1,5 @@
 <!-- ABOUT THE PROJECT -->
-## <a href="https://npi.omzig.dev" target="_blank">NPI Checker</a>
+## [NPI Checker](https://npi.omzig.dev)
 
 NPI Checker is a web app that allows you to search for practice information regarding any doctor in the United States.
 Doctor information is then combined with another query that fetches the doctor's accepted insurance.
@@ -14,7 +14,7 @@ You can search by following:
 * First, Last Name, and State
 * Telephone Number
 
-Live demo is available here: <a href="https://npi.omzig.dev" target="_blank">NPI Checker</a>
+Live demo is available here: [NPI Checker](https://npi.omzig.dev)
 
 ### Built using:
 * Python

@@ -24,7 +24,6 @@ Live demo is available here: https://npi.omzig.dev
 * [![Bootstrap][Bootstrap.com]][Bootstrap-url]
 * [![Docker][Docker.com]][Docker-url]
 
-<p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
@@ -57,3 +56,5 @@ Live demo is available here: https://npi.omzig.dev
 [Bootstrap-url]: https://getbootstrap.com
 [JQuery.com]: https://img.shields.io/badge/jQuery-0769AD?style=for-the-badge&logo=jquery&logoColor=white
 [JQuery-url]: https://jquery.com 
+[Python.com]: https://img.shields.io/badge/python-v3.7-blue
+[Python-url]: https://python.org

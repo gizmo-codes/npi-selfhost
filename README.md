@@ -18,7 +18,7 @@ Live demo is available here: https://npi.omzig.dev
 
 ### Built With
 
-* [![Python][Python.org]][Next-url]
+* [![Python][Python.org]][Python-url]
 * [![JQuery][JQuery.com]][JQuery-url]
 * [![SQLite][SQLite.org]][SQLite-url]
 * [![Bootstrap][Bootstrap.com]][Bootstrap-url]

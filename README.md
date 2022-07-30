@@ -1,7 +1,7 @@
 <!-- ABOUT THE PROJECT -->
 ## [NPI Checker](https://npi.omzig.dev)
 
-NPI Checker is a web app that allows you to search for any doctor in the United States which then returns information to the user.
+NPI Checker is a web app that allows you to search for practice information regarding any doctor in the United States.
 Doctor practice information is then combined with another query ran behind the scenes that fetches the doctor's accepted insurance.
 
 You can search by following:

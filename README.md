@@ -1,22 +1,5 @@
-<!-- TABLE OF CONTENTS -->
-<details>
-  <summary>Table of Contents</summary>
-  <ol>
-    <li>
-      <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#built-with">Built With</a></li>
-      </ul>
-    </li>
-  </ol>
-</details>
-
-
-
 <!-- ABOUT THE PROJECT -->
-## About The Project
-
-[![Product Name Screen Shot][product-screenshot]](https://npi.omzig.dev)
+## [NPI Checker](https://npi.omzig.dev)
 
 NPI Checker is a web app that allows you to search for any doctor in the United States which then returns information to the user.
 Doctor practice information is then combined with another query ran behind the scenes that fetches the doctor's accepted insurance.
@@ -32,9 +15,6 @@ You can search by following:
 
 Live demo is available here: https://npi.omzig.dev
 
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
 ### Built With
 
 * [![Python][Python.org]][Next-url]
@@ -44,8 +24,6 @@ Live demo is available here: https://npi.omzig.dev
 * [![Docker][Docker.com]][Docker-url]
 
 <p align="right">(<a href="#top">back to top</a>)</p>
-
-
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->

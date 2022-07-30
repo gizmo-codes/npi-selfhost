@@ -14,7 +14,7 @@ You can search by following:
 * First, Last Name, and State
 * Telephone Number
 
-Live demo is available here: https://npi.omzig.dev
+Live demo is available here: <a href="https://npi.omzig.dev" target="_blank">NPI Checker</a>
 
 ### Built using:
 * Python

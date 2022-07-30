@@ -18,7 +18,7 @@ Live demo is available here: [NPI Checker](https://npi.omzig.dev)
 
 ### Built using:
 * Python
-* JQuery
+* jQuery
 * HTML/CSS/JS
 * SQLite
 * Docker

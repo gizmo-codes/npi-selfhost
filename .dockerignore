@@ -6,3 +6,6 @@ rootkey.csv
 .git*
 .dockerignore.bak
 __pycache__
+*.offset
+print.log
+tempCodeRunnerFile.py

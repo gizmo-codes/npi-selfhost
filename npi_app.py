@@ -1,6 +1,6 @@
 # App Description Here 👯‍♂️
 from datetime import datetime, date
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, Response
 import time
 from npyi.npi import search
 import requests
@@ -9,11 +9,12 @@ from flask_cors import CORS
 import re
 import logging
 import sqlite3
-
-#TODO: double space between names makes it broken
+import sys
 
 logging.basicConfig(filename='npi.log', format='%(asctime)s %(message)s', level=logging.DEBUG)
 logging.debug('Program initialized')
+print_path = "print.log"
+#print_path = "C:/Users/Omzig/Desktop/Personal_Projects/npi-log/app.log"
 
 # Set database path.
 db = './db/npi.db'
@@ -32,6 +33,7 @@ def npi_check():
     # Start time for logging/output.
     st = time.time()
     logging.debug('npi_check Begun')
+    sys.stdout = open(print_path, 'a')
 
     # Headers for API calls.
     headers = set_headers()
@@ -49,6 +51,7 @@ def npi_check():
         if len(npinumber) != 10:
             logging.error('NPINUMBER was not 10 digits')
             print("Invalid NPI number [%s]: %s digits provided." %(npinumber,len(npinumber)))
+            sys.stdout.close()
             return "<span style='color: red;'>NPI number must be <b>exactly 10 digits</b></span>.<br>You provided [%s]: %s digits." %(npinumber,len(npinumber))
 
         # Log Feedback
@@ -75,6 +78,7 @@ def npi_check():
         # No results
         if response['result_count'] == 0 and isLocal == 0 or (len(rows) == 0 and isLocal == 1):
             print("No results")
+            sys.stdout.close()
             return "<span style='color: red;'>No results found</span> for NPI: %s" %npinumber
 
         # NPPES API working: Set PECOS API query to NPI# recieved from the NPPES API call.
@@ -105,6 +109,7 @@ def npi_check():
             #print("npi_check end")
             print("Adding Healthcare Worker [ID: "+str(npinumber)+"]")
             print("Data complete")
+            sys.stdout.close()
             return resp
         # PECOS API down.
         except requests.exceptions.RequestException as e:
@@ -131,7 +136,7 @@ def npi_check():
                     logging.debug('npi_check End')
                     print("Adding Healthcare Worker [ID: "+str(npinumber)+"]")
                     print("Data complete")
-
+                    sys.stdout.close()
                     return resp
                 # Local PECOS SQL DB returned rows, set appropriate key value pair based on returned data.
                 else:
@@ -148,7 +153,7 @@ def npi_check():
                     logging.debug('npi_check End')
                     print("Adding Healthcare Worker [ID: "+str(npinumber)+"]")
                     print("Data complete")
-
+                    sys.stdout.close()
                     return resp
             # Both NPPES and PECOS api down, use local (SQL) data for both.
             else:
@@ -169,6 +174,7 @@ def npi_check():
                 # Local NPPES SQL DB returned no rows, therefore no matching doctor by given NPI number.
                 if len(npirows) == 0:
                     print("No results")
+                    sys.stdout.close()
                     return "<span style='color: red;'>No results found</span> for NPI: %s" %npinumber
                 # Local NPPES SQL DB returned rows, check for PECOS data mathcing given NPI.
                 else:
@@ -181,6 +187,7 @@ def npi_check():
                         logging.debug('npi_check End')
                         print("Adding Healthcare Worker [ID: "+str(npinumber)+"]")
                         print("Data complete")
+                        sys.stdout.close()
                         return resp
                     # Local PECOS SQL DB returned rows, set appropriate key value pair based on returned data.
                     else:
@@ -199,12 +206,13 @@ def npi_check():
                         logging.debug('npi_check End')
                         print("Adding Healthcare Worker [ID: "+str(npinumber)+"]")
                         print("Data complete")
-
+                        sys.stdout.close()
                         return resp
     else:
         npinumber = request.form['NPINUMBER']
         logging.error('NPINUMBER was not 10 digits')
         print("Invalid NPI number [%s]: %s digits provided." %(npinumber,len(npinumber)))
+        sys.stdout.close()
         return "<span style='color: red;'>NPI number must be <b>exactly 10 digits</b></span>.<br>You provided [%s]: %s digits." %(npinumber,len(npinumber))
 
 # API to check matching phone number.
@@ -223,6 +231,7 @@ def phone_check():
     # Start time for logging/output.
     st = time.time()
     logging.debug('phone_check Begun')
+    sys.stdout = open(print_path, 'a')
 
     # Headers for API calls.
     headers = set_headers()
@@ -244,6 +253,7 @@ def phone_check():
             p = '-'.join([phonenumber[:3], phonenumber[3:6], phonenumber[6:]])
         if len(phonenumber) != 10:
             print("Invalid phone number: %s" %p)
+            sys.stdout.close()
             return "<span style='color: red;'>%s</span> is not a valid phone number." %p
 
         print("Beginning search for phone number %s" %p)
@@ -261,6 +271,7 @@ def phone_check():
         logging.debug('Phone# SQL Query end')
         if len(rows) == 0:
             print("No results")
+            sys.stdout.close()
             return "<span style='color: red;'>No results found</span> for phone number: %s" %p
 
         # For each entry that had a matching phone number.
@@ -385,6 +396,7 @@ def phone_check():
                         # Local NPPES SQL DB returned no rows, therefore no matching doctor by given NPI number.
                         if len(npirows) == 0:
                             print("No results")
+                            sys.stdout.close()
                             return "<span style='color: red;'>No results found</span> for phone number: %s" %p
                         # Local NPPES SQL DB returned rows, check for PECOS data mathcing given NPI.
                         else:
@@ -468,6 +480,7 @@ def phone_check():
                     # Local NPPES SQL DB returned no rows, therefore no matching doctor by given NPI number.
                     if len(npirows) == 0:
                         print("No results")
+                        sys.stdout.close()
                         return "<span style='color: red;'>No results found</span> for phone number: %s" %p
                     # Local NPPES SQL DB returned rows, check for PECOS data mathcing given NPI.
                     else:
@@ -496,6 +509,7 @@ def phone_check():
                             npireturns_all = npireturns_all + npireturns
 
         print("Data complete\nDisplaying",count-1,"healthcare workers.")
+        sys.stdout.close()
         logging.debug('phone_check End')
         elapsed_time = query_time(st)
         resp = jsonify('<table id="respTable"><thead><tr id=sticky><th>NPI</th><th class=fitwidth>Name</th><th>Credential</th><th class=fitwidth>Practice #</th><th class=fitwidth>Mailing #</th><th class=fitwidth>Fax</th><th>Primary Practice</th><th>Mailing Address</th><th class=fitwidth>Other Practice</th><th>PECOS</th><th class=maxwidth>Email</th></tr></thead>' + npireturns_all + '</table><br><font color=red>Execution Time: ' + str(round(elapsed_time,2)) + ' seconds</font>')
@@ -521,6 +535,7 @@ def doc_check():
     # Start time for logging/output.
     st = time.time()
     logging.debug('doc_check Begun')
+    sys.stdout = open(print_path, 'a')
 
     # Headers for API calls.
     headers = set_headers()
@@ -538,6 +553,7 @@ def doc_check():
         if " " not in doc_input:
             DOCTOR_LASTNAME = re.sub(r"[^a-zA-Z0-9]", "",request.form["DOCTORNAME"].upper()) # Only last name given
             if len(DOCTOR_LASTNAME) == 0:
+                sys.stdout.close()
                 return "<span style='color: red;'>Stop</span> inputting emojis <b>Spencer</b> 😠"
             print("Beginning name search | Last name: %s" %(DOCTOR_LASTNAME))
             if "STATE" in request.form and len(request.form['STATE']) > 1:
@@ -624,6 +640,7 @@ def doc_check():
 
         if response['result_count'] == 0 and isLocal == 0 or (len(rows) == 0 and isLocal == 1):
             print("No results")
+            sys.stdout.close()
             if DOC_STATE:
                 return "<span style='color: red;'><b>No doctor found</b></span> by the name '<b>%s %s</b>' in '<b>%s</b>'" %(DOCTOR_FIRSTNAME,DOCTOR_LASTNAME, DOC_STATE)
             else:
@@ -749,6 +766,7 @@ def doc_check():
                                 # Local NPPES SQL DB returned no rows, therefore no matching doctor by given NPI number.
                                 if len(npirows) == 0:
                                     print("No results")
+                                    sys.stdout.close()
                                     if DOC_STATE:
                                         return "<span style='color: red;'><b>No doctor found</b></span> by the name '<b>%s %s</b>' in '<b>%s</b>'" %(DOCTOR_FIRSTNAME,DOCTOR_LASTNAME, DOC_STATE)
                                     else:
@@ -836,6 +854,7 @@ def doc_check():
                             # Local NPPES SQL DB returned no rows, therefore no matching doctor by given NPI number.
                             if len(npirows) == 0:
                                 print("No results")
+                                sys.stdout.close()
                                 if DOC_STATE:
                                     return "<span style='color: red;'><b>No doctor found</b></span> by the name '<b>%s %s</b>' in '<b>%s</b>'" %(DOCTOR_FIRSTNAME,DOCTOR_LASTNAME, DOC_STATE)
                                 else:
@@ -867,6 +886,7 @@ def doc_check():
                                     npireturns_all = npireturns_all + npireturns
 
                 print("Data complete\nDisplaying",count-1,"healthcare workers.")
+                sys.stdout.close()
                 logging.debug('phone_check End')
                 elapsed_time = query_time(st)
                 resp = jsonify('<table id="respTable"><thead><tr id=sticky><th>NPI</th><th class=fitwidth>Name</th><th>Credential</th><th class=fitwidth>Practice #</th><th class=fitwidth>Mailing #</th><th class=fitwidth>Fax</th><th>Primary Practice</th><th>Mailing Address</th><th class=fitwidth>Other Practice</th><th>PECOS</th><th class=maxwidth>Email</th></tr></thead>' + npireturns_all + '</table><br><font color=red>Execution Time: ' + str(round(elapsed_time,2)) + ' seconds</font>')
@@ -987,6 +1007,7 @@ def doc_check():
 
                                 # Local NPPES SQL DB returned no rows, therefore no matching doctor by given NPI number.
                                 if len(npirows) == 0:
+                                    sys.stdout.close()
                                     return "No results found for given doctor NPI number %s" %npinumber
                                     
                                 # Local NPPES SQL DB returned rows, check for PECOS data mathcing given NPI.
@@ -1070,6 +1091,7 @@ def doc_check():
 
                             # Local NPPES SQL DB returned no rows, therefore no matching doctor by given NPI number.
                             if len(npirows) == 0:
+                                sys.stdout.close()
                                 return "No results found for given doctor NPI number %s" %npinumber
                             # Local NPPES SQL DB returned rows, check for PECOS data mathcing given NPI.
                             else:
@@ -1098,13 +1120,16 @@ def doc_check():
                                     npireturns_all = npireturns_all + npireturns
 
                 print("Data complete\nDisplaying",count-1,"healthcare workers.")
+                sys.stdout.close()
                 logging.debug('phone_check End')
                 elapsed_time = query_time(st)
                 resp = jsonify('<table id="respTable"><thead><tr id=sticky><th>NPI</th><th class=fitwidth>Name</th><th>Credential</th><th class=fitwidth>Practice #</th><th class=fitwidth>Mailing #</th><th class=fitwidth>Fax</th><th>Primary Practice</th><th>Mailing Address</th><th class=fitwidth>Other Practice</th><th>PECOS</th><th class=maxwidth>Email</th></tr></thead>' + npireturns_all + '</table><br><font color=red>Execution Time: ' + str(round(elapsed_time,2)) + ' seconds</font>')
                 return resp
     # Doctor name was less than 3 letters.
     else:
+        sys.stdout.close()
         return "<span style='color: red;'>Doctor Name must be <b>at least 3 letters</b></span>"
+
 
 # Helper function for formatting SQL returns (NPPES API down).
 def rows_formatting(pecosdata, rows, x):
@@ -1260,6 +1285,16 @@ def npi():
         return render_template('npi.html')
     else:
         return render_template('npi.html')
+
+@npi_app.route('/logs')
+def logs():
+	def full_logs():
+		full = open(print_path, 'r')
+		lines = full.readlines()
+		for line in lines:
+			yield str(line)
+		full.close()
+	return Response(full_logs(), mimetype= 'text/event-stream')
 
 if __name__ == '__main__':
     npi_app.run(host='74.103.169.112', port=5755, threads=8, debug=True)

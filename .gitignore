@@ -5,3 +5,6 @@ pecos.csv
 rootkey.csv
 /db
 __pycache__
+*.offset
+print.log
+tempCodeRunnerFile.py

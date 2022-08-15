@@ -10,6 +10,14 @@ import time
 import math
 
 # https://data.cms.gov/data-api/v1/dataset/0824b6d0-14ad-47a0-94e2-f317a3658317/data-viewer?_format=csv
+# https://data.cms.gov/resources/order-and-referring-data-dictionary
+
+# PECOS manages practice medicare enrollment into these categories. (?)
+
+# PARTB - Indicates that provider can refer to Part B. (Outpatient [Doctor vists] medical coverage)
+# DME   - Indicates that provider can order Durable Medical Equipment.
+# HHA   - Indicates that provider can refer to Home Health Agency. (Nurses/Aide comes to you)
+# PMD   - Indicates that provider can order Power Mobility Devices.
 
 # Function to download PECOS data.
 def download_and_unzip(url, extract_to='.'):

@@ -93,8 +93,13 @@ def npi_check():
         try:
             # PECOS api call.
             pecosresponse = requests.get(url=url,headers=headers)
-            pecosdata = pecosresponse.json()
-
+            
+            # Check if API is returning empty data.
+            if pecosresponse:
+                pecosdata = pecosresponse.json()
+            else:
+                raise requests.exceptions.RequestException
+            
             # NPPES API and PECOS API functioning.
             if isLocal == 0:
                 npireturns = resp_formatting(pecosdata, response, x)
@@ -321,7 +326,12 @@ def phone_check():
                 try:
                     # PECOS api call.
                     pecosresponse = requests.get(url=url,headers=headers)
-                    pecosdata = pecosresponse.json()
+                    
+                    # Check if API is returning empty data.
+                    if pecosresponse:
+                        pecosdata = pecosresponse.json()
+                    else:
+                        raise requests.exceptions.RequestException
 
                     # NPPES API and PECOS API functioning.
                     if isLocal == 0:
@@ -693,7 +703,12 @@ def doc_check():
                         try:
                             # PECOS api call.
                             pecosresponse = requests.get(url=url,headers=headers)
-                            pecosdata = pecosresponse.json()
+
+                            # Check if API is returning empty data.
+                            if pecosresponse:
+                                pecosdata = pecosresponse.json()
+                            else:
+                                raise requests.exceptions.RequestException
 
                             # NPPES API and PECOS API functioning.
                             if isLocal == 0:
@@ -936,7 +951,12 @@ def doc_check():
                         try:
                             # PECOS api call.
                             pecosresponse = requests.get(url=url,headers=headers)
-                            pecosdata = pecosresponse.json()
+                            
+                            # Check if API is returning empty data.
+                            if pecosresponse:
+                                pecosdata = pecosresponse.json()
+                            else:
+                                raise requests.exceptions.RequestException
 
                             # NPPES API and PECOS API functioning.
                             if isLocal == 0:

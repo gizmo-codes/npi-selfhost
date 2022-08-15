@@ -1,4 +1,4 @@
-FROM python
+FROM python:3.9-slim
 ENV LISTEN_PORT=5755
 EXPOSE 5755
 WORKDIR /app

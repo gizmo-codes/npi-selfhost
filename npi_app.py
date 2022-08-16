@@ -519,10 +519,10 @@ def phone_check():
                             npireturns_all = npireturns_all + npireturns
 
         print("Data complete\nDisplaying",count-1,"healthcare workers.")
-        sys.stdout.close()
         logging.debug('phone_check End')
         elapsed_time = query_time(st)
         resp = jsonify('<table id="respTable"><thead><tr id=sticky><th>NPI</th><th class=fitwidth>Name</th><th>Credential</th><th class=fitwidth>Practice #</th><th class=fitwidth>Mailing #</th><th class=fitwidth>Fax</th><th>Primary Practice</th><th>Mailing Address</th><th class=fitwidth>Other Practice</th><th>PECOS</th><th class=maxwidth>Email</th></tr></thead>' + npireturns_all + '</table><br><font color=red>Execution Time: ' + str(round(elapsed_time,2)) + ' seconds</font>')
+        sys.stdout.close()
         return resp
 
 # API to check for matching doctor name.
@@ -901,10 +901,10 @@ def doc_check():
                                     npireturns_all = npireturns_all + npireturns
 
                 print("Data complete\nDisplaying",count-1,"healthcare workers.")
-                sys.stdout.close()
                 logging.debug('phone_check End')
                 elapsed_time = query_time(st)
                 resp = jsonify('<table id="respTable"><thead><tr id=sticky><th>NPI</th><th class=fitwidth>Name</th><th>Credential</th><th class=fitwidth>Practice #</th><th class=fitwidth>Mailing #</th><th class=fitwidth>Fax</th><th>Primary Practice</th><th>Mailing Address</th><th class=fitwidth>Other Practice</th><th>PECOS</th><th class=maxwidth>Email</th></tr></thead>' + npireturns_all + '</table><br><font color=red>Execution Time: ' + str(round(elapsed_time,2)) + ' seconds</font>')
+                sys.stdout.close()
                 return resp
 
             else:
@@ -1140,10 +1140,10 @@ def doc_check():
                                     npireturns_all = npireturns_all + npireturns
 
                 print("Data complete\nDisplaying",count-1,"healthcare workers.")
-                sys.stdout.close()
                 logging.debug('phone_check End')
                 elapsed_time = query_time(st)
                 resp = jsonify('<table id="respTable"><thead><tr id=sticky><th>NPI</th><th class=fitwidth>Name</th><th>Credential</th><th class=fitwidth>Practice #</th><th class=fitwidth>Mailing #</th><th class=fitwidth>Fax</th><th>Primary Practice</th><th>Mailing Address</th><th class=fitwidth>Other Practice</th><th>PECOS</th><th class=maxwidth>Email</th></tr></thead>' + npireturns_all + '</table><br><font color=red>Execution Time: ' + str(round(elapsed_time,2)) + ' seconds</font>')
+                sys.stdout.close()
                 return resp
     # Doctor name was less than 3 letters.
     else:

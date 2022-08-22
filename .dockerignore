@@ -10,3 +10,4 @@ __pycache__
 print.log
 tempCodeRunnerFile.py
 *.bak
+./db/npi.db

@@ -83,11 +83,11 @@ def npi_check():
 
         # NPPES API working: Set PECOS API query to NPI# recieved from the NPPES API call.
         if isLocal == 0:   
-            url = "https://data.cms.gov/data-api/v1/dataset/0824b6d0-14ad-47a0-94e2-f317a3658317/data?column=DME%2CNPI&keyword=" + str(response['results'][0]['number'])
+            url = "https://data.cms.gov/data-api/v1/dataset/42308887-0e01-4bf0-9164-9f67df9431b6/data?column=DME%2CNPI&keyword=" + str(response['results'][0]['number'])
 
         # NPPES API NOT working: Set PECOS API query to NPI# recieved from the local NPPES SQL data.
         else: 
-            url = "https://data.cms.gov/data-api/v1/dataset/0824b6d0-14ad-47a0-94e2-f317a3658317/data?column=DME%2CNPI&keyword=" + str(rows[x][0])
+            url = "https://data.cms.gov/data-api/v1/dataset/42308887-0e01-4bf0-9164-9f67df9431b6/data?column=DME%2CNPI&keyword=" + str(rows[x][0])
 
         # try PECOS API
         try:
@@ -315,11 +315,11 @@ def phone_check():
             if isLocal == 0:   
                 #print(len(response))
                 #print(response)
-                url = "https://data.cms.gov/data-api/v1/dataset/0824b6d0-14ad-47a0-94e2-f317a3658317/data?column=DME%2CNPI&keyword=" + str(response['results'][0]['number'])
+                url = "https://data.cms.gov/data-api/v1/dataset/42308887-0e01-4bf0-9164-9f67df9431b6/data?column=DME%2CNPI&keyword=" + str(response['results'][0]['number'])
 
             # NPPES API NOT working: Set PECOS API query to NPI# recieved from the local NPPES SQL data.
             else: 
-                url = "https://data.cms.gov/data-api/v1/dataset/0824b6d0-14ad-47a0-94e2-f317a3658317/data?column=DME%2CNPI&keyword=" + str(rows[x][0])
+                url = "https://data.cms.gov/data-api/v1/dataset/42308887-0e01-4bf0-9164-9f67df9431b6/data?column=DME%2CNPI&keyword=" + str(rows[x][0])
 
             # try PECOS API if it has not already failed.
             if pAPIdown == 0:
@@ -519,10 +519,10 @@ def phone_check():
                             npireturns_all = npireturns_all + npireturns
 
         print("Data complete\nDisplaying",count-1,"healthcare workers.")
-        sys.stdout.close()
         logging.debug('phone_check End')
         elapsed_time = query_time(st)
         resp = jsonify('<table id="respTable"><thead><tr id=sticky><th>NPI</th><th class=fitwidth>Name</th><th>Credential</th><th class=fitwidth>Practice #</th><th class=fitwidth>Mailing #</th><th class=fitwidth>Fax</th><th>Primary Practice</th><th>Mailing Address</th><th class=fitwidth>Other Practice</th><th>PECOS</th><th class=maxwidth>Email</th></tr></thead>' + npireturns_all + '</table><br><font color=red>Execution Time: ' + str(round(elapsed_time,2)) + ' seconds</font>')
+        sys.stdout.close()
         return resp
 
 # API to check for matching doctor name.
@@ -692,11 +692,11 @@ def doc_check():
 
                     # NPPES API working: Set PECOS API query to NPI# recieved from the NPPES API call.
                     if isLocal == 0:   
-                        url = "https://data.cms.gov/data-api/v1/dataset/0824b6d0-14ad-47a0-94e2-f317a3658317/data?column=DME%2CNPI&keyword=" + str(response['results'][0]['number'])
+                        url = "https://data.cms.gov/data-api/v1/dataset/42308887-0e01-4bf0-9164-9f67df9431b6/data?column=DME%2CNPI&keyword=" + str(response['results'][0]['number'])
 
                     # NPPES API NOT working: Set PECOS API query to NPI# recieved from the local NPPES SQL data.
                     else: 
-                        url = "https://data.cms.gov/data-api/v1/dataset/0824b6d0-14ad-47a0-94e2-f317a3658317/data?column=DME%2CNPI&keyword=" + str(rows[x][0])
+                        url = "https://data.cms.gov/data-api/v1/dataset/42308887-0e01-4bf0-9164-9f67df9431b6/data?column=DME%2CNPI&keyword=" + str(rows[x][0])
 
                     # try PECOS API if it has not already failed.
                     if pAPIdown == 0:
@@ -901,10 +901,10 @@ def doc_check():
                                     npireturns_all = npireturns_all + npireturns
 
                 print("Data complete\nDisplaying",count-1,"healthcare workers.")
-                sys.stdout.close()
                 logging.debug('phone_check End')
                 elapsed_time = query_time(st)
                 resp = jsonify('<table id="respTable"><thead><tr id=sticky><th>NPI</th><th class=fitwidth>Name</th><th>Credential</th><th class=fitwidth>Practice #</th><th class=fitwidth>Mailing #</th><th class=fitwidth>Fax</th><th>Primary Practice</th><th>Mailing Address</th><th class=fitwidth>Other Practice</th><th>PECOS</th><th class=maxwidth>Email</th></tr></thead>' + npireturns_all + '</table><br><font color=red>Execution Time: ' + str(round(elapsed_time,2)) + ' seconds</font>')
+                sys.stdout.close()
                 return resp
 
             else:
@@ -940,11 +940,11 @@ def doc_check():
 
                     # NPPES API working: Set PECOS API query to NPI# recieved from the NPPES API call.
                     if isLocal == 0:   
-                        url = "https://data.cms.gov/data-api/v1/dataset/0824b6d0-14ad-47a0-94e2-f317a3658317/data?column=DME%2CNPI&keyword=" + str(response['results'][0]['number'])
+                        url = "https://data.cms.gov/data-api/v1/dataset/42308887-0e01-4bf0-9164-9f67df9431b6/data?column=DME%2CNPI&keyword=" + str(response['results'][0]['number'])
 
                     # NPPES API NOT working: Set PECOS API query to NPI# recieved from the local NPPES SQL data.
                     else: 
-                        url = "https://data.cms.gov/data-api/v1/dataset/0824b6d0-14ad-47a0-94e2-f317a3658317/data?column=DME%2CNPI&keyword=" + str(rows[x][0])
+                        url = "https://data.cms.gov/data-api/v1/dataset/42308887-0e01-4bf0-9164-9f67df9431b6/data?column=DME%2CNPI&keyword=" + str(rows[x][0])
 
                     # try PECOS API if it has not already failed.
                     if pAPIdown == 0:
@@ -1140,10 +1140,10 @@ def doc_check():
                                     npireturns_all = npireturns_all + npireturns
 
                 print("Data complete\nDisplaying",count-1,"healthcare workers.")
-                sys.stdout.close()
                 logging.debug('phone_check End')
                 elapsed_time = query_time(st)
                 resp = jsonify('<table id="respTable"><thead><tr id=sticky><th>NPI</th><th class=fitwidth>Name</th><th>Credential</th><th class=fitwidth>Practice #</th><th class=fitwidth>Mailing #</th><th class=fitwidth>Fax</th><th>Primary Practice</th><th>Mailing Address</th><th class=fitwidth>Other Practice</th><th>PECOS</th><th class=maxwidth>Email</th></tr></thead>' + npireturns_all + '</table><br><font color=red>Execution Time: ' + str(round(elapsed_time,2)) + ' seconds</font>')
+                sys.stdout.close()
                 return resp
     # Doctor name was less than 3 letters.
     else:

@@ -65,7 +65,7 @@ def npi_check():
         except requests.exceptions.RequestException as e:
             print("[NPI] NPPES exception:",e)
             response = {}
-            response['result_count'] = 0
+            response['resultCount'] = 0
             isLocal = 1
             con = sqlite3.connect(db)
             cur = con.cursor()
@@ -76,7 +76,7 @@ def npi_check():
             con.close()
 
         # No results
-        if response['result_count'] == 0 and isLocal == 0 or (len(rows) == 0 and isLocal == 1):
+        if response['resultCount'] == 0 and isLocal == 0 or (len(rows) == 0 and isLocal == 1):
             print("No results")
             sys.stdout.close()
             return "<span style='color: red;'>No results found</span> for NPI: %s" %npinumber
@@ -294,20 +294,20 @@ def phone_check():
                 except requests.exceptions.RequestException as e:
                     print("[PHONE] NPPES exception:",e)
                     response = {}
-                    response['result_count'] = 0
+                    response['resultCount'] = 0
                     isLocal = 1
                     nAPIdown = 1
 
             # Prevent NPPES API call as it has already failed.
             else:
                 response = {}
-                response['result_count'] = 0
+                response['resultCount'] = 0
                 nAPIdown = 1
                 isLocal = 1
 
             # No results -- this should never happen, given that if a phone number is found, and NPI should exist.
             # But if it does... Move on.
-            if response['result_count'] == 0 and isLocal == 0 or (len(rows) == 0 and isLocal == 1):
+            if response['resultCount'] == 0 and isLocal == 0 or (len(rows) == 0 and isLocal == 1):
                 continue
 
 
@@ -575,7 +575,7 @@ def doc_check():
                 except requests.exceptions.RequestException as e:
                     print("[DOC] NPPES exception:",e)
                     response = {}
-                    response['result_count'] = 0
+                    response['resultCount'] = 0
                     isLocal = 1
                     nAPIdown = 1
                     con = sqlite3.connect(db)
@@ -591,7 +591,7 @@ def doc_check():
                 except requests.exceptions.RequestException as e:
                     print("[DOC] NPPES exception:",e)
                     response = {}
-                    response['result_count'] = 0
+                    response['resultCount'] = 0
                     isLocal = 1 
                     nAPIdown = 1
                     con = sqlite3.connect(db)
@@ -621,7 +621,7 @@ def doc_check():
                 except requests.exceptions.RequestException as e:
                     print("[DOC] NPPES exception:",e)
                     response = {}
-                    response['result_count'] = 0
+                    response['resultCount'] = 0
                     isLocal = 1 
                     nAPIdown = 1
                     con = sqlite3.connect(db)
@@ -638,7 +638,7 @@ def doc_check():
                 except requests.exceptions.RequestException as e:
                     print("[DOC] NPPES exception:",e)
                     response = {}
-                    response['result_count'] = 0
+                    response['resultCount'] = 0
                     isLocal = 1
                     nAPIdown = 1
                     con = sqlite3.connect(db)
@@ -648,7 +648,7 @@ def doc_check():
                     rows = cur.fetchall()
                     con.close()
 
-        if response['result_count'] == 0 and isLocal == 0 or (len(rows) == 0 and isLocal == 1):
+        if response['resultCount'] == 0 and isLocal == 0 or (len(rows) == 0 and isLocal == 1):
             print("No results")
             sys.stdout.close()
             if DOC_STATE:
@@ -674,20 +674,20 @@ def doc_check():
                         except requests.exceptions.RequestException as e:
                             print("[PHONE] NPPES exception:",e)
                             response = {}
-                            response['result_count'] = 0
+                            response['resultCount'] = 0
                             isLocal = 1
                             nAPIdown = 1
 
                     # Prevent NPPES API call as it has already failed.
                     else:
                         response = {}
-                        response['result_count'] = 0
+                        response['resultCount'] = 0
                         nAPIdown = 1
                         isLocal = 1
 
                      # This should never happen if a phone number is found -- an NPI should exist...
                      # However if for some reason it does... Move on.
-                    if response['result_count'] == 0 and isLocal == 0 or (len(rows) == 0 and isLocal == 1):
+                    if response['resultCount'] == 0 and isLocal == 0 or (len(rows) == 0 and isLocal == 1):
                         continue
 
                     # NPPES API working: Set PECOS API query to NPI# recieved from the NPPES API call.
@@ -922,20 +922,20 @@ def doc_check():
                         except requests.exceptions.RequestException as e:
                             print("[PHONE] NPPES exception:",e)
                             response = {}
-                            response['result_count'] = 0
+                            response['resultCount'] = 0
                             isLocal = 1
                             nAPIdown = 1
 
                     # Prevent NPPES API call as it has already failed.
                     else:
                         response = {}
-                        response['result_count'] = 0
+                        response['resultCount'] = 0
                         nAPIdown = 1
                         isLocal = 1
 
                     # This should never happen if a phone number is found -- an NPI should exist.
                     # However if it does happen... Move on.
-                    if response['result_count'] == 0 and isLocal == 0 or (len(rows) == 0 and isLocal == 1):
+                    if response['resultCount'] == 0 and isLocal == 0 or (len(rows) == 0 and isLocal == 1):
                         continue
 
                     # NPPES API working: Set PECOS API query to NPI# recieved from the NPPES API call.
@@ -1220,13 +1220,16 @@ def resp_formatting(pecosdata, response, x):
 
     # Set appropriate data.
     if "endpoints" in response['results'][x]:
-        endpoint = response['results'][x]['endpoints'][0]['endpoint']
+        if response['results'][x]['endpoints']:
+            endpoint = response['results'][x]['endpoints'][0]['endpoint']
+        else:
+            endpoint = ""
     else:
-        endpoint = "UNKNOWN"
+        endpoint = ""
     if "credential" in response['results'][x]['basic']:
         credential = response['results'][x]['basic']['credential']
     else:
-        credential = "UNKNOWN"
+        credential = ""
     if "first_name" in response['results'][0]['basic']:
         first_name = response['results'][x]['basic']['first_name']
     else:
@@ -1242,7 +1245,7 @@ def resp_formatting(pecosdata, response, x):
     if "fax_number" in response['results'][x]['addresses'][0]:
         fax_number=response['results'][x]['addresses'][0]['fax_number']
     else:
-        fax_number="UNKNOWN"
+        fax_number=""
     if "fax_number" in response['results'][x]['addresses'][1]:
         fax_numberp=response['results'][x]['addresses'][1]['fax_number']
     else:
@@ -1250,25 +1253,35 @@ def resp_formatting(pecosdata, response, x):
     if "telephone_number" in response['results'][x]['addresses'][0]:
         telephone_number=response['results'][x]['addresses'][0]['telephone_number']
     else:
-        telephone_number="NO #"
+        telephone_number=""
     if "telephone_number" in response['results'][x]['addresses'][1]:
         telephone_numberp=response['results'][x]['addresses'][1]['telephone_number']
     else:
-        telephone_numberp="NO #"
+        telephone_numberp=""
     if "practiceLocations" in response['results'][x]:
-        primaryPractice = response['results'][x]['practiceLocations'][0]['address_1'] + " " + \
-        response['results'][x]['practiceLocations'][0]['address_2'] + " " + \
-        response['results'][x]['practiceLocations'][0]['city'] + " " + \
-        response['results'][x]['practiceLocations'][0]['state'] + " " + \
-        response['results'][x]['practiceLocations'][0]['postal_code']
+        if response['results'][x]['practiceLocations']: 
+            if "address_2" in response['results'][x]['practiceLocations']:
+                address2 = response['results'][x]['practiceLocations'][0]['address_2']
+            else:
+                address2 = ""
+            primaryPractice = response['results'][x]['practiceLocations'][0]['address_1'] + " " + \
+            address2 + " " + \
+            response['results'][x]['practiceLocations'][0]['city'] + " " + \
+            response['results'][x]['practiceLocations'][0]['state'] + " " + \
+            response['results'][x]['practiceLocations'][0]['postal_code']
+        else: primaryPractice = ""
     else:
         primaryPractice = ""
+    if "address_2" in response['results'][x]['addresses']:
+       address2 = response['results'][x]['addresses'][0]['address_2']
+    else:
+       address2 = ""
     npireturns = "<tr><td class=fitwidth>" + str(response['results'][x]['number']) + "</td>" + "<td class=fitwidth>" + first_name + \
     " " + middle_name + " " + last_name + "</td>" + "<td>" + credential + "</td>" + "<td class=fitwidth>" + telephone_number + "</td>" + \
     "<td class=fitwidth>" + telephone_numberp + "</td>" + "<td class=fitwidth>" + fax_numberp + \
-    "</td>" + "<td>" + response['results'][x]['addresses'][0]['address_1'] + " " + response['results'][x]['addresses'][0]['address_2'] + " " + response['results'][x]['addresses'][0]['city'] + \
+    "</td>" + "<td>" + response['results'][x]['addresses'][0]['address_1'] + " " + address2 + " " + response['results'][x]['addresses'][0]['city'] + \
     " " + response['results'][x]['addresses'][0]['state'] + " " + response['results'][x]['addresses'][0]['postal_code'] + "</td>" + \
-    "<td>" + response['results'][x]['addresses'][1]['address_1'] + " " + response['results'][x]['addresses'][1]['address_2'] + " " + response['results'][x]['addresses'][1]['city'] + \
+    "<td>" + response['results'][x]['addresses'][1]['address_1'] + " " + address2 + " " + response['results'][x]['addresses'][1]['city'] + \
     " " + response['results'][x]['addresses'][1]['state'] + " " + response['results'][x]['addresses'][1]['postal_code'] + "</td>" + "<td>" + primaryPractice + "</td>" + \
     "<td class=pecos>" + pecosdata.get('DME') + "</td>" + "<td class=maxwidth>" + endpoint + "</td>" + "</tr>"
     return npireturns

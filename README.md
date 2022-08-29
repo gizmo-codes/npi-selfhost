@@ -22,3 +22,18 @@ Live version is available here: [NPI Checker](https://npi.omzig.dev)
 * HTML/CSS/JS
 * SQLite
 * Docker
+
+### Changelog
+(8/29) - Live logging implemented. Accessed via <npi checker url>/logs -- Example: [https://npi.omzig.dev/logs](https://npi.omzig.dev/logs)
+(8/23) - Fixed API errors caused by previous formatting changes being reverted.
+(8/22) - Fixed API errors caused by formatting changes on their end.
+       - Updated new API link provided by NPPES
+(8/15) - Changed docker image to python:3.9-slim -- Cut size of compiled image by ~75%
+(8/1) - Added basic log page. Accessed via <npi checker url>/logs -- Example: [https://npi.omzig.dev/logs](https://npi.omzig.dev/logs)
+(7/29) - Added README for project use.
+(7/25) - Added improved user feedback when searches are invalid.
+(7/24) - Implemented https
+       - Improved input validation/sanitization
+(7/23) - Improved input validation/sanitization
+(7/22) - Initial Commit
+       - Updated logging statements

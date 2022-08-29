@@ -41,9 +41,11 @@ Live version is available here: [NPI Checker](https://npi.omzig.dev)
 (7/25) - Added improved user feedback when searches are invalid.
   
 (7/24) - Implemented https
+  
        - Improved input validation/sanitization
   
 (7/23) - Improved input validation/sanitization
   
 (7/22) - Initial Commit
+  
        - Updated logging statements

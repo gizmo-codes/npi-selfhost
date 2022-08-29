@@ -23,6 +23,9 @@ Live version is available here: [NPI Checker](https://npi.omzig.dev)
 * SQLite
 * Docker
 
+### TODO
+- Refactor/clean up code
+
 ### Changelog
 ##### (8/29/22)
 - Live logging implemented. Accessed via <npi checker url>/logs -- Example: [https://npi.omzig.dev/logs](https://npi.omzig.dev/logs)

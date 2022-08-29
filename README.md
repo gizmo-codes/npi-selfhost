@@ -24,9 +24,11 @@ Live version is available here: [NPI Checker](https://npi.omzig.dev)
 * Docker
 
 ### Changelog
-(8/29) - Live logging implemented. Accessed via <npi checker url>/logs -- Example: [https://npi.omzig.dev/logs](https://npi.omzig.dev/logs)
+- (8/29)
+  - Live logging implemented. Accessed via <npi checker url>/logs -- Example: [https://npi.omzig.dev/logs](https://npi.omzig.dev/logs)
  
-(8/23) - Fixed API errors caused by previous formatting changes being reverted.
+- (8/23)
+  - Fixed API errors caused by previous formatting changes being reverted.
   
 (8/22) - Fixed API errors caused by formatting changes on their end.
   

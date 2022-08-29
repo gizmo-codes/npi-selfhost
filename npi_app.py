@@ -98,7 +98,7 @@ def npi_check():
             con.close()
 
         # No results
-        if response['resultCount'] == 0 and isLocal == 0 or (len(rows) == 0 and isLocal == 1):
+        if response['result_count'] == 0 and isLocal == 0 or (len(rows) == 0 and isLocal == 1):
             print("No results")
             sys.stdout.close()
             return "<span style='color: red;'>No results found</span> for NPI: %s" %npinumber
@@ -684,7 +684,7 @@ def doc_check():
                     rows = cur.fetchall()
                     con.close()
 
-        if response['resultCount'] == 0 and isLocal == 0 or (len(rows) == 0 and isLocal == 1):
+        if response['result_count'] == 0 and isLocal == 0 or (len(rows) == 0 and isLocal == 1):
             print("No results")
             sys.stdout.close()
             if DOC_STATE:

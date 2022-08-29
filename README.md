@@ -24,30 +24,35 @@ Live version is available here: [NPI Checker](https://npi.omzig.dev)
 * Docker
 
 ### Changelog
-##### (8/29)
+##### (8/29/22)
 - Live logging implemented. Accessed via <npi checker url>/logs -- Example: [https://npi.omzig.dev/logs](https://npi.omzig.dev/logs)
  
-##### (8/23)
+##### (8/23/22)
 - Fixed API errors caused by previous formatting changes being reverted.
   
-##### (8/22)
+##### (8/22/22)
 - Fixed API errors caused by formatting changes on their end.
 - Updated new API link provided by NPPES
   
-(8/15) - Changed docker image to python:3.9-slim -- Cut size of compiled image by ~75%
+##### (8/15/22)
+  - Changed docker image to python:3.9-slim -- Cut size of compiled image by ~75%
   
-(8/1) - Added basic log page. Accessed via <npi checker url>/logs -- Example: [https://npi.omzig.dev/logs](https://npi.omzig.dev/logs)
+##### (8/1/22)
+  - Added basic log page. Accessed via <npi checker url>/logs -- Example: [https://npi.omzig.dev/logs](https://npi.omzig.dev/logs)
   
-(7/29) - Added README for project use.
+##### (7/29/22)
+  - Added README for project use.
   
-(7/25) - Added improved user feedback when searches are invalid.
+##### (7/25/22)
+  - Added improved user feedback when searches are invalid.
   
-(7/24) - Implemented https
+##### (7/24/22)
+  - Implemented https
+  - Improved input validation/sanitization
   
-       - Improved input validation/sanitization
+##### (7/23)
+  - Improved input validation/sanitization
   
-(7/23) - Improved input validation/sanitization
-  
-(7/22) - Initial Commit
-  
-       - Updated logging statements
+##### (7/22)
+  - Initial Commit
+  - Updated logging statements

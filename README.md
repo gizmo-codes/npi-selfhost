@@ -25,6 +25,8 @@ Live version is available here: [NPI Checker](https://npi.omzig.dev)
 
 ### TODO
 - Refactor/clean up code
+- Pipelines (CI/CD)
+- Automated unit testing.
 
 ### Changelog
 ##### (8/29/22)

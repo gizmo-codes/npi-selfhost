@@ -6,6 +6,6 @@ rootkey.csv
 /db
 __pycache__
 *.offset
-print.log
+/logs
 tempCodeRunnerFile.py
 *.bak

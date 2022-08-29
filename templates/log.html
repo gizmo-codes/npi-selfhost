@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" dir="ltr" class="uk-height-1-1">
 <head>
+	<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>flasktest</title>
+	<title>NPI Logs</title>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css" />
 	<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -37,16 +38,16 @@
 -->
 
 <script type="text/javascript">
-
+	// API call to load previous logs
 	function loadLogs() {
         $.ajax({
           type: "GET",
           url: "http://127.0.0.1:5755/loadlogs",
           dataType: "text",
           cache: false,
-          success: function (msg) {
-            //console.log(msg)
-			$('#display_list').prepend(msg);
+          success: function (logs) {
+            //console.log(logs)
+			$('#display_list').prepend(logs);
           },
           error: function (jqXHR, textStatus, errorThrown) {
             console.log("Error:", errorThrown);
@@ -54,12 +55,12 @@
         });
       }
     
-	  
+	// Load previous logs when page is ready
 	$(document).ready(loadLogs);
 
+	// Live display new log entries
 	var source = new EventSource("/log");
 	source.onmessage = function(event) {
-		// $('#display').prepend(event.data);
 		$('#display_list').prepend('<li>'+event.data+'</li>');
 		if(event.data == 100){
 			source.close()

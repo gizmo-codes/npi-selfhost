@@ -1421,6 +1421,6 @@ def show_env():
 	return env
 
 if __name__ == '__main__':
-    #npi_app.run(host='74.103.169.112', port=5755, threads=8, debug=True)
+    npi_app.run(host='74.103.169.112', port=5755, threads=8, debug=True)
     #npi_app.run(host='0.0.0.0', port=5755, threads=8, debug=True)
-    npi_app.run(host='0.0.0.0', port=5755, debug=True)
+    #npi_app.run(host='0.0.0.0', port=5755, debug=True)

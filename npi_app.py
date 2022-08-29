@@ -11,6 +11,13 @@ import logging
 import sqlite3
 import sys
 
+# PECOS API Info
+# https://data.cms.gov/api-docs
+
+# Click "Access API" to get latest api link.
+# https://data.cms.gov/provider-characteristics/medicare-provider-supplier-enrollment/order-and-referring
+
+
 logging.basicConfig(filename='npi.log', format='%(asctime)s %(message)s', level=logging.DEBUG)
 logging.debug('Program initialized')
 print_path = "print.log"
@@ -65,7 +72,7 @@ def npi_check():
         except requests.exceptions.RequestException as e:
             print("[NPI] NPPES exception:",e)
             response = {}
-            response['resultCount'] = 0
+            response['result_count'] = 0
             isLocal = 1
             con = sqlite3.connect(db)
             cur = con.cursor()
@@ -76,18 +83,18 @@ def npi_check():
             con.close()
 
         # No results
-        if response['resultCount'] == 0 and isLocal == 0 or (len(rows) == 0 and isLocal == 1):
+        if response['result_count'] == 0 and isLocal == 0 or (len(rows) == 0 and isLocal == 1):
             print("No results")
             sys.stdout.close()
             return "<span style='color: red;'>No results found</span> for NPI: %s" %npinumber
 
         # NPPES API working: Set PECOS API query to NPI# recieved from the NPPES API call.
         if isLocal == 0:   
-            url = "https://data.cms.gov/data-api/v1/dataset/42308887-0e01-4bf0-9164-9f67df9431b6/data?column=DME%2CNPI&keyword=" + str(response['results'][0]['number'])
+            url = "https://data.cms.gov/data-api/v1/dataset/d697b5d4-7464-4b91-83f9-3eaa0011e81b/data?column=DME%2CNPI&keyword=" + str(response['results'][0]['number'])
 
         # NPPES API NOT working: Set PECOS API query to NPI# recieved from the local NPPES SQL data.
         else: 
-            url = "https://data.cms.gov/data-api/v1/dataset/42308887-0e01-4bf0-9164-9f67df9431b6/data?column=DME%2CNPI&keyword=" + str(rows[x][0])
+            url = "https://data.cms.gov/data-api/v1/dataset/d697b5d4-7464-4b91-83f9-3eaa0011e81b/data?column=DME%2CNPI&keyword=" + str(rows[x][0])
 
         # try PECOS API
         try:
@@ -294,20 +301,20 @@ def phone_check():
                 except requests.exceptions.RequestException as e:
                     print("[PHONE] NPPES exception:",e)
                     response = {}
-                    response['resultCount'] = 0
+                    response['result_count'] = 0
                     isLocal = 1
                     nAPIdown = 1
 
             # Prevent NPPES API call as it has already failed.
             else:
                 response = {}
-                response['resultCount'] = 0
+                response['result_count'] = 0
                 nAPIdown = 1
                 isLocal = 1
 
             # No results -- this should never happen, given that if a phone number is found, and NPI should exist.
             # But if it does... Move on.
-            if response['resultCount'] == 0 and isLocal == 0 or (len(rows) == 0 and isLocal == 1):
+            if response['result_count'] == 0 and isLocal == 0 or (len(rows) == 0 and isLocal == 1):
                 continue
 
 
@@ -315,11 +322,11 @@ def phone_check():
             if isLocal == 0:   
                 #print(len(response))
                 #print(response)
-                url = "https://data.cms.gov/data-api/v1/dataset/42308887-0e01-4bf0-9164-9f67df9431b6/data?column=DME%2CNPI&keyword=" + str(response['results'][0]['number'])
+                url = "https://data.cms.gov/data-api/v1/dataset/d697b5d4-7464-4b91-83f9-3eaa0011e81b/data?column=DME%2CNPI&keyword=" + str(response['results'][0]['number'])
 
             # NPPES API NOT working: Set PECOS API query to NPI# recieved from the local NPPES SQL data.
             else: 
-                url = "https://data.cms.gov/data-api/v1/dataset/42308887-0e01-4bf0-9164-9f67df9431b6/data?column=DME%2CNPI&keyword=" + str(rows[x][0])
+                url = "https://data.cms.gov/data-api/v1/dataset/d697b5d4-7464-4b91-83f9-3eaa0011e81b/data?column=DME%2CNPI&keyword=" + str(rows[x][0])
 
             # try PECOS API if it has not already failed.
             if pAPIdown == 0:
@@ -575,7 +582,7 @@ def doc_check():
                 except requests.exceptions.RequestException as e:
                     print("[DOC] NPPES exception:",e)
                     response = {}
-                    response['resultCount'] = 0
+                    response['result_count'] = 0
                     isLocal = 1
                     nAPIdown = 1
                     con = sqlite3.connect(db)
@@ -591,7 +598,7 @@ def doc_check():
                 except requests.exceptions.RequestException as e:
                     print("[DOC] NPPES exception:",e)
                     response = {}
-                    response['resultCount'] = 0
+                    response['result_count'] = 0
                     isLocal = 1 
                     nAPIdown = 1
                     con = sqlite3.connect(db)
@@ -621,7 +628,7 @@ def doc_check():
                 except requests.exceptions.RequestException as e:
                     print("[DOC] NPPES exception:",e)
                     response = {}
-                    response['resultCount'] = 0
+                    response['result_count'] = 0
                     isLocal = 1 
                     nAPIdown = 1
                     con = sqlite3.connect(db)
@@ -638,7 +645,7 @@ def doc_check():
                 except requests.exceptions.RequestException as e:
                     print("[DOC] NPPES exception:",e)
                     response = {}
-                    response['resultCount'] = 0
+                    response['result_count'] = 0
                     isLocal = 1
                     nAPIdown = 1
                     con = sqlite3.connect(db)
@@ -648,7 +655,7 @@ def doc_check():
                     rows = cur.fetchall()
                     con.close()
 
-        if response['resultCount'] == 0 and isLocal == 0 or (len(rows) == 0 and isLocal == 1):
+        if response['result_count'] == 0 and isLocal == 0 or (len(rows) == 0 and isLocal == 1):
             print("No results")
             sys.stdout.close()
             if DOC_STATE:
@@ -674,29 +681,29 @@ def doc_check():
                         except requests.exceptions.RequestException as e:
                             print("[PHONE] NPPES exception:",e)
                             response = {}
-                            response['resultCount'] = 0
+                            response['result_count'] = 0
                             isLocal = 1
                             nAPIdown = 1
 
                     # Prevent NPPES API call as it has already failed.
                     else:
                         response = {}
-                        response['resultCount'] = 0
+                        response['result_count'] = 0
                         nAPIdown = 1
                         isLocal = 1
 
                      # This should never happen if a phone number is found -- an NPI should exist...
                      # However if for some reason it does... Move on.
-                    if response['resultCount'] == 0 and isLocal == 0 or (len(rows) == 0 and isLocal == 1):
+                    if response['result_count'] == 0 and isLocal == 0 or (len(rows) == 0 and isLocal == 1):
                         continue
 
                     # NPPES API working: Set PECOS API query to NPI# recieved from the NPPES API call.
                     if isLocal == 0:   
-                        url = "https://data.cms.gov/data-api/v1/dataset/42308887-0e01-4bf0-9164-9f67df9431b6/data?column=DME%2CNPI&keyword=" + str(response['results'][0]['number'])
+                        url = "https://data.cms.gov/data-api/v1/dataset/d697b5d4-7464-4b91-83f9-3eaa0011e81b/data?column=DME%2CNPI&keyword=" + str(response['results'][0]['number'])
 
                     # NPPES API NOT working: Set PECOS API query to NPI# recieved from the local NPPES SQL data.
                     else: 
-                        url = "https://data.cms.gov/data-api/v1/dataset/42308887-0e01-4bf0-9164-9f67df9431b6/data?column=DME%2CNPI&keyword=" + str(rows[x][0])
+                        url = "https://data.cms.gov/data-api/v1/dataset/d697b5d4-7464-4b91-83f9-3eaa0011e81b/data?column=DME%2CNPI&keyword=" + str(rows[x][0])
 
                     # try PECOS API if it has not already failed.
                     if pAPIdown == 0:
@@ -922,29 +929,29 @@ def doc_check():
                         except requests.exceptions.RequestException as e:
                             print("[PHONE] NPPES exception:",e)
                             response = {}
-                            response['resultCount'] = 0
+                            response['result_count'] = 0
                             isLocal = 1
                             nAPIdown = 1
 
                     # Prevent NPPES API call as it has already failed.
                     else:
                         response = {}
-                        response['resultCount'] = 0
+                        response['result_count'] = 0
                         nAPIdown = 1
                         isLocal = 1
 
                     # This should never happen if a phone number is found -- an NPI should exist.
                     # However if it does happen... Move on.
-                    if response['resultCount'] == 0 and isLocal == 0 or (len(rows) == 0 and isLocal == 1):
+                    if response['result_count'] == 0 and isLocal == 0 or (len(rows) == 0 and isLocal == 1):
                         continue
 
                     # NPPES API working: Set PECOS API query to NPI# recieved from the NPPES API call.
                     if isLocal == 0:   
-                        url = "https://data.cms.gov/data-api/v1/dataset/42308887-0e01-4bf0-9164-9f67df9431b6/data?column=DME%2CNPI&keyword=" + str(response['results'][0]['number'])
+                        url = "https://data.cms.gov/data-api/v1/dataset/d697b5d4-7464-4b91-83f9-3eaa0011e81b/data?column=DME%2CNPI&keyword=" + str(response['results'][0]['number'])
 
                     # NPPES API NOT working: Set PECOS API query to NPI# recieved from the local NPPES SQL data.
                     else: 
-                        url = "https://data.cms.gov/data-api/v1/dataset/42308887-0e01-4bf0-9164-9f67df9431b6/data?column=DME%2CNPI&keyword=" + str(rows[x][0])
+                        url = "https://data.cms.gov/data-api/v1/dataset/d697b5d4-7464-4b91-83f9-3eaa0011e81b/data?column=DME%2CNPI&keyword=" + str(rows[x][0])
 
                     # try PECOS API if it has not already failed.
                     if pAPIdown == 0:

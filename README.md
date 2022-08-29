@@ -7,14 +7,14 @@ Both sets of information are then combined and displayed to the user in a table.
 
 You can search by following:
 * NPI number
-  - This is unique identifier given to medical personnel.
+  - This is unique 10 digit identifier given to medical personnel.
 * Last Name
 * Last Name and State
 * First and Last Name
 * First, Last Name, and State
 * Telephone Number
 
-Live demo is available here: [NPI Checker](https://npi.omzig.dev)
+Live version is available here: [NPI Checker](https://npi.omzig.dev)
 
 ### Built using:
 * Python

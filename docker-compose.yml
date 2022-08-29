@@ -1,7 +1,7 @@
 services:
   npiapp:
     container_name: npiapp
-    image: omzig7/npi:selfhost21
+    image: omzig7/npi:selfhost22
     environment:
       - PYTHONUNBUFFERED=1
       - COMPOSE_PROJECT_NAME=npi
@@ -15,5 +15,5 @@ services:
         source: N:\Projects\db
         target: /app/db
       - type: bind
-        source: N:\Projects\npi-selfhost\print.log
-        target: /app/print.log
+        source: N:\Projects\npi-selfhost\logs
+        target: /app/logs

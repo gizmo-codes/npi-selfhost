@@ -100,6 +100,7 @@ def npi_check():
         # No results
         if response['result_count'] == 0 and isLocal == 0 or (len(rows) == 0 and isLocal == 1):
             print("No results")
+            print("log-end")
             sys.stdout.close()
             return "<span style='color: red;'>No results found</span> for NPI: %s" %npinumber
 
@@ -685,9 +686,10 @@ def doc_check():
                     con.close()
 
         if response['result_count'] == 0 and isLocal == 0 or (len(rows) == 0 and isLocal == 1):
-            print("No results")
-            sys.stdout.close()
             if DOC_STATE:
+                print("No doctor found by the name '%s %s' in '%s'" %(DOCTOR_FIRSTNAME, DOCTOR_LASTNAME, DOC_STATE))
+                print('log-end')
+                sys.stdout.close()
                 return "<span style='color: red;'><b>No doctor found</b></span> by the name '<b>%s %s</b>' in '<b>%s</b>'" %(DOCTOR_FIRSTNAME,DOCTOR_LASTNAME, DOC_STATE)
             else:
                 print("No doctor found by the name '%s %s'" %(DOCTOR_FIRSTNAME,DOCTOR_LASTNAME))
@@ -1385,7 +1387,7 @@ def entry_point():
 @npi_app.route('/loadlogs')
 def cmon():
 	def full_log():
-		full = open(LOG_FILE, 'r')
+		full = open(PRINT_FILE, 'r')
 		lines = full.readlines()
 		lines.reverse()
 		for line in lines:
@@ -1399,10 +1401,14 @@ def cmon():
 # 'Live' logging
 @npi_app.route('/log')
 def progress_log():
-	def generate():
-		for line in Pygtail(LOG_FILE, every_n=1):
-			yield "data:" + str(line) + "\n\n"
-	return Response(generate(), mimetype= 'text/event-stream')
+    def generate():
+        for line in Pygtail(PRINT_FILE, every_n=1):
+            if line.strip('\n') == "log-end":
+                logging.debug("PYG log-end IF HIT")
+                yield 'data: <hr style="width:50%;height:0.5px;text-align:left;margin:5px;margin-left:0px;"> \n\n'
+            else:
+                    yield "data:" + str(line) + "\n\n"
+    return Response(generate(), mimetype= 'text/event-stream')
 
 # ??
 @npi_app.route('/env')

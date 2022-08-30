@@ -12,6 +12,14 @@ from pygtail import Pygtail
 import sqlite3
 import sys
 
+# Testing
+import threading
+from threading import Thread
+
+# https://www.pythontutorial.net/python-concurrency/python-threading/
+# https://stackoverflow.com/questions/17035077/logging-to-multiple-log-files-from-different-classes-in-python
+# https://docs.python.org/3/tutorial/inputoutput.html
+
 # App Name
 npi_app = Flask(__name__)
 CORS(npi_app)
@@ -54,7 +62,7 @@ def npi_check():
     # Start time for logging/output.
     st = time.time()
     logging.debug('npi_check Begun')
-    sys.stdout = open(PRINT_FILE, 'a')
+    #sys.stdout = open(PRINT_FILE, 'a')
 
     # Headers for API calls.
     headers = set_headers()
@@ -1410,7 +1418,7 @@ def progress_log():
                     yield "data:" + str(line) + "\n\n"
     return Response(generate(), mimetype= 'text/event-stream')
 
-# ??
+# Testing
 @npi_app.route('/env')
 def show_env():
 	#log.info("route =>'/env' - hit")
@@ -1420,7 +1428,27 @@ def show_env():
 	#log.info("route =>'/env' [env]:\n%s" % env)
 	return env
 
+class WriteToFile(threading.Thread):
+    def __init__(self,lock,fp):
+        threading.Thread.__init__(self)
+        self.lock=lock
+        self.fp=fp
+    def run(self):
+        self.lock.acquire()
+        self.fp.write('some string')
+        self.lock.release()
+f=open('somefile','a')
+lock=threading.Lock()
+thread= WriteToFile(lock,f)
+thread.start()
+
+while threading.activeCount() >1:
+    pass
+else:
+    f.close()
+
 if __name__ == '__main__':
-    npi_app.run(host='74.103.169.112', port=5755, threads=8, debug=True)
-    #npi_app.run(host='0.0.0.0', port=5755, threads=8, debug=True)
+    #npi_app.run(host='74.103.169.112', port=5755, threads=8, debug=True)
+    # waitress-serve --listen=*:5755 npi_app:npi_app
+    npi_app.run(host='0.0.0.0', port=5755, threads=8, debug=True)
     #npi_app.run(host='0.0.0.0', port=5755, debug=True)

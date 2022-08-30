@@ -24,8 +24,9 @@ Live version is available here: [NPI Checker](https://npi.omzig.dev)
 * Docker
 
 ### TODO
-- Refactor/clean up code
-- Pipelines (CI/CD)
+- Multi-thread save logs.
+- Refactor/clean up code.
+- Pipelines (CI/CD).
 - Automated unit testing.
 
 ### Changelog

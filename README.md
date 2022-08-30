@@ -24,7 +24,7 @@ Live version is available here: [NPI Checker](https://npi.omzig.dev)
 * Docker
 
 ### TODO
-- Multi-thread save logs.
+- Multi-thread log writing to keep formatting/readability.
 - Refactor/clean up code.
 - Pipelines (CI/CD).
 - Automated unit testing.

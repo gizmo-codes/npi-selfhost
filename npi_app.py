@@ -41,14 +41,14 @@ USER_LOG = './logs/user.log'
 
 # Log function for multiple logs
 def setup_logger(name, log_file, formatter, level=logging.DEBUG):
-    handler = logging.FileHandler(log_file)        
-    handler.setFormatter(formatter)
-
     logger = logging.getLogger(name)
     logger.setLevel(level)
-    logger.addHandler(handler)
-
+    if not logger.handlers:
+        handler = logging.FileHandler(log_file)        
+        handler.setFormatter(formatter)
+        logger.addHandler(handler)
     return logger
+
 
 # Dev feedback logger
 dev_log = setup_logger('dev_log', DEV_LOG, logging.Formatter('%(asctime)s %(levelname)s %(message)s'))
@@ -119,11 +119,11 @@ def npi_check():
 
         # NPPES API working: Set PECOS API query to NPI# recieved from the NPPES API call.
         if isLocal == 0:   
-            url = "https://data.cms.gov/data-api/v1/dataset/d697b5d4-7464-4b91-83f9-3eaa0011e81b/data?column=DME%2CNPI&keyword=" + str(response['results'][0]['number'])
+            url = "https://data.cms.gov/data-api/v1/dataset/8d900ef4-0571-42d0-bc8f-82dcf1b5f4c7/data?column=DME%2CNPI&keyword=" + str(response['results'][0]['number'])
 
         # NPPES API NOT working: Set PECOS API query to NPI# recieved from the local NPPES SQL data.
         else: 
-            url = "https://data.cms.gov/data-api/v1/dataset/d697b5d4-7464-4b91-83f9-3eaa0011e81b/data?column=DME%2CNPI&keyword=" + str(rows[x][0])
+            url = "https://data.cms.gov/data-api/v1/dataset/8d900ef4-0571-42d0-bc8f-82dcf1b5f4c7/data?column=DME%2CNPI&keyword=" + str(rows[x][0])
 
         # try PECOS API
         try:
@@ -154,6 +154,7 @@ def npi_check():
             return resp
         # PECOS API down.
         except requests.exceptions.RequestException as e:
+            print("EXCEPTION: ",e)
             user_log.info("[NPI] PECOS exception: %s" %e)
 
             # Only PECOS API down, use local (SQL) data.
@@ -350,11 +351,11 @@ def phone_check():
             if isLocal == 0:   
                 #print(len(response))
                 #print(response)
-                url = "https://data.cms.gov/data-api/v1/dataset/d697b5d4-7464-4b91-83f9-3eaa0011e81b/data?column=DME%2CNPI&keyword=" + str(response['results'][0]['number'])
+                url = "https://data.cms.gov/data-api/v1/dataset/8d900ef4-0571-42d0-bc8f-82dcf1b5f4c7/data?column=DME%2CNPI&keyword=" + str(response['results'][0]['number'])
 
             # NPPES API NOT working: Set PECOS API query to NPI# recieved from the local NPPES SQL data.
             else: 
-                url = "https://data.cms.gov/data-api/v1/dataset/d697b5d4-7464-4b91-83f9-3eaa0011e81b/data?column=DME%2CNPI&keyword=" + str(rows[x][0])
+                url = "https://data.cms.gov/data-api/v1/dataset/8d900ef4-0571-42d0-bc8f-82dcf1b5f4c7/data?column=DME%2CNPI&keyword=" + str(rows[x][0])
 
             # try PECOS API if it has not already failed.
             if pAPIdown == 0:
@@ -729,11 +730,11 @@ def doc_check():
 
                     # NPPES API working: Set PECOS API query to NPI# recieved from the NPPES API call.
                     if isLocal == 0:   
-                        url = "https://data.cms.gov/data-api/v1/dataset/d697b5d4-7464-4b91-83f9-3eaa0011e81b/data?column=DME%2CNPI&keyword=" + str(response['results'][0]['number'])
+                        url = "https://data.cms.gov/data-api/v1/dataset/8d900ef4-0571-42d0-bc8f-82dcf1b5f4c7/data?column=DME%2CNPI&keyword=" + str(response['results'][0]['number'])
 
                     # NPPES API NOT working: Set PECOS API query to NPI# recieved from the local NPPES SQL data.
                     else: 
-                        url = "https://data.cms.gov/data-api/v1/dataset/d697b5d4-7464-4b91-83f9-3eaa0011e81b/data?column=DME%2CNPI&keyword=" + str(rows[x][0])
+                        url = "https://data.cms.gov/data-api/v1/dataset/8d900ef4-0571-42d0-bc8f-82dcf1b5f4c7/data?column=DME%2CNPI&keyword=" + str(rows[x][0])
 
                     # try PECOS API if it has not already failed.
                     if pAPIdown == 0:
@@ -981,11 +982,11 @@ def doc_check():
 
                     # NPPES API working: Set PECOS API query to NPI# recieved from the NPPES API call.
                     if isLocal == 0:   
-                        url = "https://data.cms.gov/data-api/v1/dataset/d697b5d4-7464-4b91-83f9-3eaa0011e81b/data?column=DME%2CNPI&keyword=" + str(response['results'][0]['number'])
+                        url = "https://data.cms.gov/data-api/v1/dataset/8d900ef4-0571-42d0-bc8f-82dcf1b5f4c7/data?column=DME%2CNPI&keyword=" + str(response['results'][0]['number'])
 
                     # NPPES API NOT working: Set PECOS API query to NPI# recieved from the local NPPES SQL data.
                     else: 
-                        url = "https://data.cms.gov/data-api/v1/dataset/d697b5d4-7464-4b91-83f9-3eaa0011e81b/data?column=DME%2CNPI&keyword=" + str(rows[x][0])
+                        url = "https://data.cms.gov/data-api/v1/dataset/8d900ef4-0571-42d0-bc8f-82dcf1b5f4c7/data?column=DME%2CNPI&keyword=" + str(rows[x][0])
 
                     # try PECOS API if it has not already failed.
                     if pAPIdown == 0:
@@ -1352,11 +1353,8 @@ def set_headers():
     headers["Access-Control-Allow-Methods"] = "DELETE, POST, GET, OPTIONS"
     return headers
 
-# TODO Make this the hopepage in addition.
-# Post landing page.
+# Post landing page & alternative page.
 @npi_app.route('/', methods=['POST', 'GET'])
-
-# Alternative page
 @npi_app.route('/npi', methods=['POST', 'GET'])
 def npi():
     dev_log.debug('Web Landing Page accessed')
@@ -1391,7 +1389,6 @@ def progress_log():
     def generate():
         for line in Pygtail(USER_LOG, every_n=1):
             if line.strip('\n') == "log-end":
-                #print("PYG log-end IF HIT")
                 yield 'data: <hr style="width:50%;height:0.5px;text-align:left;margin:5px;margin-left:0px;"> \n\n'
             else:
                     yield "data:" + str(line) + "\n\n"
@@ -1405,9 +1402,9 @@ def progress_log():
 #         self.fp=fp
 #     def run(self):
 #         self.lock.acquire()
-#         self.fp.write('some string')
+#         self.fp.write('LOG ENTRY')
 #         self.lock.release()
-# f=open('somefile','a')
+# f=open('./logs/logfile','a')
 # lock=threading.Lock()
 # thread= WriteToFile(lock,f)
 # thread.start()

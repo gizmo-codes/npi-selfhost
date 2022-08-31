@@ -30,6 +30,9 @@ Live version is available here: [NPI Checker](https://npi.omzig.dev)
 - Automated unit testing.
 
 ### Changelog
+##### (8/30/22)
+- Updated new order and referring (insurance) API link.
+
 ##### (8/29/22)
 - Live logging implemented. Accessed via <npi checker url>/logs -- Example: [https://npi.omzig.dev/logs](https://npi.omzig.dev/logs)
  

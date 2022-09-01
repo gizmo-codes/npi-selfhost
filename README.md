@@ -23,11 +23,12 @@ Live version is available here: [NPI Checker](https://npi.omzig.dev)
 * SQLite
 * Docker
 
-### TODO
-- Refactor/clean up code. **Currently Heavily refactoring**
+### TODO (**Currently heavily refactoring**)
+- Refactor/clean up code.
 - Multi-thread log writing to keep formatting/readability.
 - Pipelines (CI/CD).
 - Automated unit testing.
+
 
 ### Changelog
 ##### (8/30/22)

@@ -20,17 +20,27 @@ Live version is available here: [NPI Checker](https://npi.omzig.dev)
 * Python
 * jQuery
 * HTML/CSS/JS
-* SQLite
+* SQL
 * Docker
 
-### TODO: (**Currently heavily refactoring**)
-- Refactor/clean up code.
-- Multi-thread log writing to keep formatting/readability.
-- Pipelines (CI/CD).
+### TODO: (**Currently Implementing Unit Testing**)
 - Automated unit testing.
+- Pipelines (CI/CD).
+- Multi-thread log writing to keep formatting/readability.
 
 
 ### Changelog
+#### (9/7/22)
+- Heavily refactored code:
+  - Removed unreachable blocks.
+  - Removed redundant code.
+  - Removed/reorganized if-else statements in a more efficient manner.
+- Added exception handling for deactivated NPI's.
+- Improved input validation
+  - State field is now limited to 2 letters
+- Improved comments and added explanations for certain implementations.
+- Streamlined both formatting function that makes the constructed table row much more readable and easier to work with or modify.
+
 ##### (8/30/22)
 - Updated new order and referring (insurance) API link.
 

@@ -1,7 +1,7 @@
 services:
   npiapp:
     container_name: npiapp
-    image: omzig7/npi:selfhost22
+    image: omzig7/npi:selfhost23
     environment:
       - PYTHONUNBUFFERED=1
       - COMPOSE_PROJECT_NAME=npi
@@ -12,8 +12,8 @@ services:
     # - db1:/app/db
       - ".:/app"
       - type: bind
-        source: N:\Projects\db
-        target: /app/db
+        source: N:\Projects\db #Folder the DB file is in
+        target: /app/db # Where the app looks for DB file within docker environment. Do not change
       - type: bind
-        source: N:\Projects\npi-selfhost\logs
-        target: /app/logs
+        source: N:\Projects\npi-selfhost\logs # Local log files.
+        target: /app/logs # Where the app saves/loads logs.

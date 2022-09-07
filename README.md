@@ -34,8 +34,12 @@ Live version is available here: [NPI Checker](https://npi.omzig.dev)
 - Heavily refactored code:
   - Removed unreachable blocks.
   - Removed redundant code.
-  - Removed/reorganized if/else statements in a more efficient manner.
+  - Removed/reorganized if-else statements in a more efficient manner.
 - Added exception handling for deactivated NPI's.
+- Improved input validation
+  - State field is now limited to 2 letters
+- Improved comments and added explanations for certain implementations.
+- Streamlined both formatting function that makes the constructed table row much more readable and easier to work with or modify.
 
 ##### (8/30/22)
 - Updated new order and referring (insurance) API link.

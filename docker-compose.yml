@@ -12,8 +12,8 @@ services:
     # - db1:/app/db
       - ".:/app"
       - type: bind
-        source: N:\Projects\db #Folder the DB file is in
+        source: N:\Projects\db # Folder the DB file is in
         target: /app/db # Where the app looks for DB file within docker environment. Do not change
       - type: bind
         source: N:\Projects\npi-selfhost\logs # Local log files.
-        target: /app/logs # Where the app saves/loads logs.
+        target: /app/logs # Where the app saves/loads logs within docker container. Do not change

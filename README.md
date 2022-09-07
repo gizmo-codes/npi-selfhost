@@ -23,14 +23,20 @@ Live version is available here: [NPI Checker](https://npi.omzig.dev)
 * SQLite
 * Docker
 
-### TODO: (**Currently heavily refactoring**)
-- Refactor/clean up code.
+### TODO: (**Currently Implementing Unit Testing**)
 - Multi-thread log writing to keep formatting/readability.
 - Pipelines (CI/CD).
 - Automated unit testing.
 
 
 ### Changelog
+#### (9/7/22)
+- Heavily refactored code:
+  - Removed unreachable blocks.
+  - Removed redundant code.
+  - Removed/reorganized if/else statements in a more efficient manner.
+- Added exception handling for deactivated NPI's.
+
 ##### (8/30/22)
 - Updated new order and referring (insurance) API link.
 

@@ -57,6 +57,9 @@ user_log = setup_logger('user_log', USER_LOG, logging.Formatter('%(message)s'))
 # Set database path.
 db = './db/npi.db'
 
+# Set PECOS API URL with NPI keyword.
+pecos_api_url = "https://data.cms.gov/data-api/v1/dataset/c99b5865-1119-4436-bb80-c5af2773ea1f/data?column=DME%2CNPI&keyword="
+
 # API to check for matching NPI number.
 @npi_app.route('/npi_check', methods=['POST'])
 def npi_check():
@@ -84,7 +87,7 @@ def npi_check():
 
         # NPI numbers are required to be exactly 10 digits.
         if len(npinumber) != 10:
-            dev_log.error('NPINUMBER was not 10 digits')
+            dev_log.info("Invalid NPI number [%s]: %s digits provided." %(npinumber,len(npinumber)))
             user_log.info("Invalid NPI number [%s]: %s digits provided." %(npinumber,len(npinumber)))
             user_log.info('log-end')
             return "<span style='color: red;'>NPI number must be <b>exactly 10 digits</b></span>.<br>You provided [%s]: %s digits." %(npinumber,len(npinumber))
@@ -96,7 +99,6 @@ def npi_check():
         try:
             # Alternative formatting, without wrapper.
             # response = requests.get("https://npiregistry.cms.hhs.gov/api/?number=%s&enumeration_type=&taxonomy_description=&first_name=&use_first_name_alias=&last_name=&organization_name=&address_purpose=&city=&state=&postal_code=&country_code=&limit=&skip=&pretty=&version=2.1" %npinumber)
-            # print(response.json())
             # response = response.json()
             response = search(search_params={'number': npinumber})
         # NPPES API down, use local (SQL) data.
@@ -122,13 +124,9 @@ def npi_check():
             user_log.info("log-end")
             return "<span style='color: red;'>No results found</span> for NPI: %s" %npinumber
 
-        # NPPES API working: Set PECOS API query to NPI# recieved from the NPPES API call.
-        if nAPIdown == 0:   
-            url = "https://data.cms.gov/data-api/v1/dataset/c99b5865-1119-4436-bb80-c5af2773ea1f/data?column=DME%2CNPI&keyword=" + str(response['results'][0]['number'])
+        # Set PECOS API url with NPI keyword. 
+        url = pecos_api_url + str(npinumber)
 
-        # NPPES API NOT working: Set PECOS API query to NPI# recieved from the local NPPES SQL data.
-        else: 
-            url = "https://data.cms.gov/data-api/v1/dataset/c99b5865-1119-4436-bb80-c5af2773ea1f/data?column=DME%2CNPI&keyword=" + str(rows[x][0])
 
         # try PECOS API
         try:
@@ -442,8 +440,8 @@ def doc_check():
                     user_log.info("Adding Healthcare Worker [ID: '%s'] %s" %(str(npinumber),count))
                     count=count+1
 
-                    # NPPES API working: Set PECOS API query to NPI# recieved from the NPPES API call.
-                    url = "https://data.cms.gov/data-api/v1/dataset/c99b5865-1119-4436-bb80-c5af2773ea1f/data?column=DME%2CNPI&keyword=" + str(npinumber)
+                    # Set PECOS API url with NPI keyword.
+                    url = pecos_api_url + str(npinumber)
 
                     # try PECOS API if it has not already failed.
                     if pAPIdown == 0:
@@ -565,8 +563,8 @@ def doc_check():
                     response = {}
                     response['result_count'] = 0
 
-                    # Set PECOS API with local data
-                    url = "https://data.cms.gov/data-api/v1/dataset/c99b5865-1119-4436-bb80-c5af2773ea1f/data?column=DME%2CNPI&keyword=" + str(rows[x][0])
+                    # Set PECOS API url with NPI keyword.
+                    url = pecos_api_url + str(rows[x][0])
 
                     # try PECOS API if it has not already failed.
                     if pAPIdown == 0:
@@ -813,7 +811,7 @@ def phone_check():
                 response['result_count'] = 0
 
             # Set PECOS API url with NPI keyword.
-            url = "https://data.cms.gov/data-api/v1/dataset/c99b5865-1119-4436-bb80-c5af2773ea1f/data?column=DME%2CNPI&keyword=" + str(npinumber)
+            url = pecos_api_url + str(npinumber)
 
             # try PECOS API if it has not already failed.
             # pAPIdown == 0 >> Deal with scenarios:

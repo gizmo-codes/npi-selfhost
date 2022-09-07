@@ -20,7 +20,7 @@ Live version is available here: [NPI Checker](https://npi.omzig.dev)
 * Python
 * jQuery
 * HTML/CSS/JS
-* SQLite
+* SQL
 * Docker
 
 ### TODO: (**Currently Implementing Unit Testing**)

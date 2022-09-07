@@ -24,9 +24,9 @@ Live version is available here: [NPI Checker](https://npi.omzig.dev)
 * Docker
 
 ### TODO: (**Currently Implementing Unit Testing**)
-- Multi-thread log writing to keep formatting/readability.
-- Pipelines (CI/CD).
 - Automated unit testing.
+- Pipelines (CI/CD).
+- Multi-thread log writing to keep formatting/readability.
 
 
 ### Changelog

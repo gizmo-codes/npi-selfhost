@@ -122,7 +122,8 @@ def npi_check():
         if response['result_count'] == 0 and (nAPIdown == 0 and pAPIdown == 0) or (len(rows) == 0 and nAPIdown == 1) or (len(rows) == 0 and pAPIdown == 1):
             user_log.info("No results")
             user_log.info("log-end")
-            return "<span style='color: red;'>No results found</span> for NPI: %s" %npinumber
+            result = "<span style='color: red;'>No results found</span> for NPI: %s" %npinumber
+            return result
 
         # Set PECOS API url with NPI keyword. 
         url = pecos_api_url + str(npinumber)
@@ -155,6 +156,7 @@ def npi_check():
             user_log.info("Data complete")
             user_log.info('log-end')
             return resp
+            #return response
         # PECOS API down.
         except requests.exceptions.RequestException as e:
             dev_log.info("[NPI] PECOS exception: %s" %e)
@@ -1102,7 +1104,7 @@ def rows_formatting(pecosdata, rows, x):
     "<td>" + full_mailing_addr + "</td>" + \
     "<td>" + other_addr + "</td>" + \
     "<td class=pecos>" + str(PECOS) + "</td>" + \
-    "<td class=maxwidth>" + endpoint + "</td>" + "</tr>"
+    "<td class=maxwidth>" + endpoint + "</td></tr>"
     return npireturns
 
 # Response formatting helper function (NPPES API up).
@@ -1264,7 +1266,7 @@ def resp_formatting(pecosdata, response, x):
     "<td>" + mailing_addr + "</td>" + \
     "<td>" + other_addr + "</td>" + \
     "<td class=pecos>" + pecosdata.get('DME') + "</td>" + \
-    "<td class=maxwidth>" + endpoint + "</td>" + "</tr>"
+    "<td class=maxwidth>" + endpoint + "</td></tr>"
     return npireturns
 
 # Helper function for time passed during query.
@@ -1323,7 +1325,7 @@ def progress_log():
     return Response(generate(), mimetype= 'text/event-stream')
 
 if __name__ == '__main__':
-    npi_app.run(host='74.103.168.58', port=5755, threads=8, debug=True)
+    #npi_app.run(host='74.103.168.58', port=5755, threads=8, debug=True)
     #waitress-serve --listen=*:5755 npi_app:npi_app
     #npi_app.run(host='0.0.0.0', port=5755, threads=8, debug=True)
-    #npi_app.run(host='0.0.0.0', port=5755, debug=True)
+    npi_app.run(host='0.0.0.0', port=5755, debug=True)

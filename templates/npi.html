@@ -209,6 +209,7 @@
     // showLoading() - Display loading wheel.
     // removeLoading() - Remove loading wheel.
     // Requires ECMAScript 6 (any modern browser).
+
     function showLoading() {
       if (document.getElementById("divLoadingFrame") != null) {
         return;
@@ -304,17 +305,22 @@
       document.body.removeChild(document.getElementById("styleLoadingWindow"));
     };
 
+    // Set API links
+    var baseURL = "https://npi.omzig.dev"
+    var isLocal = 0
+    if (isLocal ==  1) {
+          baseURL = "http://127.0.0.1:5755";
+        }
+
     function checkNPI() {
       $('#msg').hide();
-
       if ($('#NPINUMBER').val() == null || $('#NPINUMBER').val() == "") {
         $('#msg').show();
         $("#msg").html("<span style='color: red;'>NPI field is blank.</span>");
       } else {
         $.ajax({
           type: "POST",
-          //url: "http://127.0.0.1:5755/npi_check",
-          url: "https://npi.omzig.dev/npi_check",
+          url: baseURL + "/npi_check",
           data: $('#NPIChecker').serialize(),
           dataType: "html",
           cache: false,
@@ -346,8 +352,7 @@
       } else {
         $.ajax({
           type: "POST",
-          //url: "http://127.0.0.1:5755/phone_check",
-          url: "https://npi.omzig.dev/phone_check",
+          url: baseURL + "/phone_check",
           data: $('#NPIChecker').serialize(),
           dataType: "html",
           cache: false,
@@ -379,8 +384,7 @@
       } else {
         $.ajax({
           type: "POST",
-          //url: "http://127.0.0.1:5755/doc_check",
-          url: "https://npi.omzig.dev/doc_check",
+          url: baseURL + "/doc_check",
           data: $('#NPIChecker').serialize(),
           dataType: "html",
           cache: false,
@@ -389,6 +393,7 @@
             $('#msg').show();
             $("#msg").html(msg.replace(/["]+/g, ''));
             removeLoading();
+            console.log("BASE URL:",baseURL)
             $('a.NPI').click(function () {
               $('#NPINUMBER').val($(this).html());
             });

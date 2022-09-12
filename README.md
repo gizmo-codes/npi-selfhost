@@ -32,9 +32,9 @@ Live version is available here: [NPI Checker](https://npi.omzig.dev)
 ### Changelog
 #### (9/12/22)
 - Added setup code (npi_setup.py) that is ran once on npi_app start:
-  - Creates logs directory/logs files if they do not exist
-  - Creates db directory if it does not exist. (DB creation implementation later)
-  - Creates ini file if it does not exist:
+  - Creates 'logs' directory and log files if they do not exist
+  - Creates 'db' directory if it does not exist. (DB creation will also occur here later)
+  - Creates NPI.ini file if it does not exist:
     - PECOS API endpoint -- If it does not exist, the most recent is scraped from the API webpage.
     - Logs path
     - Database path

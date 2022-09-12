@@ -1,15 +1,13 @@
 # App Description Here 👯‍♂️
 from flask import Flask, render_template, request, jsonify, Response
-import time
 import npyi
 from npyi.npi import search
 import requests
 from requests.structures import CaseInsensitiveDict
 from flask_cors import CORS
-import re
-import logging, os
 from pygtail import Pygtail
 import sqlite3
+import logging, os, sys, re, time, npi_setup
 
 # TODO
 # Remove stripped input from frontend as well.
@@ -27,6 +25,15 @@ CORS(npi_app)
 npi_app.config["DEBUG"] = os.environ.get("FLASK_DEBUG", True)
 npi_app.config["JSON_AS_ASCII"] = False
 
+# Grab settings from INI file.
+settings = npi_setup.getSettings()
+log_path = settings[0]
+db_path = settings[1]
+ip_addr = settings[2]
+port = settings[3]
+dataset = settings[4]
+ajax_url = settings[5]
+
 # Diable Flask Logging
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
@@ -34,8 +41,10 @@ npi_app.logger.disabled = True
 log.disabled = True
 
 # Log path(s)
-DEV_LOG = './logs/npi.log'
-USER_LOG = './logs/user.log'
+DEV_LOG = log_path+'/npi.log'
+USER_LOG = log_path+'/user.log'
+# Database path
+db = db_path+'/npi.db'
 
 # Log function for multiple logs
 def setup_logger(name, log_file, formatter, level=logging.DEBUG):
@@ -50,15 +59,11 @@ def setup_logger(name, log_file, formatter, level=logging.DEBUG):
 
 # Dev feedback logger
 dev_log = setup_logger('dev_log', DEV_LOG, logging.Formatter('%(asctime)s %(levelname)s %(message)s'))
-
 # User feedback logger
 user_log = setup_logger('user_log', USER_LOG, logging.Formatter('%(message)s'))
 
-# Set database path.
-db = './db/npi.db'
-
 # Set PECOS API URL with NPI keyword.
-pecos_api_url = "https://data.cms.gov/data-api/v1/dataset/c99b5865-1119-4436-bb80-c5af2773ea1f/data?column=DME%2CNPI&keyword="
+pecos_api_url = "https://data.cms.gov/data-api/v1/dataset/"+dataset+"/data?column=DME%2CNPI&keyword="
 
 # API to check for matching NPI number.
 @npi_app.route('/npi_check', methods=['POST'])
@@ -1324,8 +1329,16 @@ def progress_log():
                     yield "data:" + str(line) + "\n\n"
     return Response(generate(), mimetype= 'text/event-stream')
 
+cli = sys.modules['flask.cli']
+cli.show_server_banner = lambda *x: None
+if ip_addr == '127.0.0.1':
+    protocol = "http://"
+else:
+    protocol = "https://"
+print("Server running on:",protocol+ajax_url+":"+port)
+
 if __name__ == '__main__':
-    #npi_app.run(host='74.103.168.58', port=5755, threads=8, debug=True)
-    #waitress-serve --listen=*:5755 npi_app:npi_app
-    #npi_app.run(host='0.0.0.0', port=5755, threads=8, debug=True)
-    npi_app.run(host='0.0.0.0', port=5755, debug=True)
+    #npi_app.run(host='ip_addr, port=port, threads=8, debug=True, use_reloader=False)
+    #waitress-serve --listen=*:port npi_app:npi_app
+    #npi_app.run(host='0.0.0.0', port=port, threads=8, debug=True, use_reloader=False)
+    npi_app.run(host='0.0.0.0', port=port, debug=True, use_reloader=False)

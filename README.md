@@ -31,16 +31,17 @@ Live version is available here: [NPI Checker](https://npi.omzig.dev)
 
 ### Changelog
 #### (9/12/22)
-- Added setup code (npi_setup.py) that is ran once on npi_app start:
-  - Creates 'logs' directory and log files if they do not exist
-  - Creates 'db' directory if it does not exist. (DB creation will also occur here later)
-  - Creates NPI.ini file if it does not exist:
-    - PECOS API endpoint -- If it does not exist, the most recent is scraped from the API webpage.
-    - Logs path
-    - Database path
-    - IP Address
-    - AJAX URL
-    - Port
+Added setup code (npi_setup.py) that is ran once on npi_app start.
+**The following is created if it does not exist**:
+- Creates 'logs' directory and log files.
+- Creates 'db' directory. (DB creation will also occur here later)
+- Creates NPI.ini file with the following contents:
+  - PECOS API endpoint -- If missing, the most recent is scraped from the API webpage.
+  - Logs path
+  - Database path
+  - IP Address
+  - AJAX URL
+  - Port
 
 #### (9/7/22)
 - Heavily refactored code:
@@ -67,24 +68,24 @@ Live version is available here: [NPI Checker](https://npi.omzig.dev)
 - Updated new API link provided by NPPES
   
 ##### (8/15/22)
-  - Changed docker image to python:3.9-slim -- Cut size of compiled image by ~75%
+- Changed docker image to python:3.9-slim -- Cut size of compiled image by ~75%
   
 ##### (8/1/22)
-  - Added basic log page. Accessed via <npi checker url>/logs -- Example: [https://npi.omzig.dev/logs](https://npi.omzig.dev/logs)
+- Added basic log page. Accessed via <npi checker url>/logs -- Example: [https://npi.omzig.dev/logs](https://npi.omzig.dev/logs)
   
 ##### (7/29/22)
-  - Added README for project use.
+- Added README for project use.
   
 ##### (7/25/22)
-  - Added improved user feedback when searches are invalid.
-  
+- Added improved user feedback when searches are invalid.
+
 ##### (7/24/22)
-  - Implemented https
-  - Improved input validation/sanitization
+- Implemented https
+- Improved input validation/sanitization
   
 ##### (7/23)
-  - Improved input validation/sanitization
-  
+- Improved input validation/sanitization
+
 ##### (7/22)
-  - Initial Commit
-  - Updated logging statements
+- Initial Commit
+- Updated logging statements

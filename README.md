@@ -31,7 +31,8 @@ Live version is available here: [NPI Checker](https://npi.omzig.dev)
 
 ### Changelog
 #### (9/12/22)
-Added setup code (npi_setup.py) that is ran once on npi_app start.
+Added setup code (**npi_setup.py**) that is ran once on npi_app start.
+
 **The following is created if it does not exist**:
 - Creates 'logs' directory and log files.
 - Creates 'db' directory. (DB creation will also occur here later)

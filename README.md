@@ -30,6 +30,10 @@ Live version is available here: [NPI Checker](https://npi.omzig.dev)
 
 
 ### Changelog
+#### (9/14/22)
+Added pytests for testing the "up-up" scenario of the two external API hits.
+- 25 tests total, testing various input scenarios for my three flask API calls "/npi_check", "doc_check", and "phone_check".
+
 #### (9/12/22)
 Added setup code (**npi_setup.py**) that is ran once on npi_app start.
 

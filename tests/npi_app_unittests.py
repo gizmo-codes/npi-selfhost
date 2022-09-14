@@ -1,6 +1,3 @@
-import npi_app
-import unittest
-
 # https://realpython.com/python-testing/#testing-for-web-frameworks-like-django-and-flask
 
 
@@ -89,3 +86,8 @@ import unittest
 # No results    x4                  |
 # Results       x4                  |
 # -----------------------------------
+
+str = ""
+print(len(str))
+str2 = "ab"
+print(len(str))

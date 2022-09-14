@@ -407,14 +407,22 @@ def doc_check():
 
         # No results found for query.
         if response['result_count'] == 0 and nAPIdown == 0 and pAPIdown == 0 or (len(rows) == 0 and nAPIdown == 1) or (len(rows) == 0 and pAPIdown == 1):
-            if DOC_STATE:
+            if DOC_STATE and DOCTOR_FIRSTNAME and DOCTOR_LASTNAME:
                 user_log.info("No doctor found by the name '%s %s' in '%s'" %(DOCTOR_FIRSTNAME, DOCTOR_LASTNAME, DOC_STATE))
                 user_log.info('log-end')
                 return "<span style='color: red;'><b>No doctor found</b></span> by the name '<b>%s %s</b>' in '<b>%s</b>'" %(DOCTOR_FIRSTNAME,DOCTOR_LASTNAME, DOC_STATE)
-            else:
+            elif DOC_STATE and DOCTOR_LASTNAME and not DOCTOR_FIRSTNAME:
+                user_log.info("No doctor found by the name '%s' in '%s'" %(DOCTOR_LASTNAME, DOC_STATE))
+                user_log.info('log-end')
+                return "<span style='color: red;'><b>No doctor found</b></span> by the name '<b>%s</b>' in '<b>%s</b>'" %(DOCTOR_LASTNAME, DOC_STATE)
+            elif DOCTOR_FIRSTNAME and not DOC_STATE:
                 user_log.info("No doctor found by the name '%s %s'" %(DOCTOR_FIRSTNAME,DOCTOR_LASTNAME))
                 user_log.info('log-end')
                 return "<span style='color: red;'><b>No doctor found</b></span> by the name '<b>%s %s</b>'" %(DOCTOR_FIRSTNAME,DOCTOR_LASTNAME)
+            else:
+                user_log.info("No doctor found by the name '%s'" %(DOCTOR_LASTNAME))
+                user_log.info('log-end')
+                return "<span style='color: red;'><b>No doctor found</b></span> by the name '<b>%s</b>'" %(DOCTOR_LASTNAME)
 
         # Results recieved.
         else:

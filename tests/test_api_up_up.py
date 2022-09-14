@@ -45,12 +45,12 @@ def runner(app):
 @pytest.mark.parametrize(
     "npi,valid,results",
     [
-        ("", False, False), # Invalid
-        ("123", False, False), # Invalid
-        ("abc", False, False), # Invalid
+        ("", False, False),          # Invalid
+        ("123", False, False),       # Invalid
+        ("abc", False, False),       # Invalid
         ("1235398777", True, False), # Exception (npyi.exceptions.NPyIException)
         ("1234567890", True, False), # No Results
-        ("1104392323", True, True), # Results
+        ("1104392323", True, True),  # Results
     ]
 )
 def test_npi_api(client, npi, valid, results):

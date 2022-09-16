@@ -9,6 +9,5 @@ __pycache__
 /logs
 tempCodeRunnerFile.py
 *.bak
-/chromedriver
 .pytest_cache
 NPI.ini

@@ -11,5 +11,4 @@ print.log
 tempCodeRunnerFile.py
 *.bak
 ./db/npi.db
-./chromedriver
 ./tests

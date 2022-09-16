@@ -1341,12 +1341,12 @@ cli = sys.modules['flask.cli']
 cli.show_server_banner = lambda *x: None
 if ip_addr == '127.0.0.1':
     protocol = "http://"
+    print("Server running on:",protocol+ip_addr+":"+port)
 else:
-    protocol = "https://"
-print("Server running on:",protocol+ajax_url+":"+port)
+    print("Server running on:",ajax_url)
 
 if __name__ == '__main__':
-    #npi_app.run(host='ip_addr, port=port, threads=8, debug=True, use_reloader=False)
+    npi_app.run(host=ip_addr, port=port, threads=8, debug=True, use_reloader=False)
     #waitress-serve --listen=*:port npi_app:npi_app
     #npi_app.run(host='0.0.0.0', port=port, threads=8, debug=True, use_reloader=False)
-    npi_app.run(host='0.0.0.0', port=port, debug=True, use_reloader=False)
+    #npi_app.run(host='0.0.0.0', port=port, debug=True, use_reloader=False)
